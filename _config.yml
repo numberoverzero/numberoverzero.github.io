@@ -1,0 +1,6 @@
+destination: ./_site
+server_port: 4000
+name: Your New Jekyll Site
+markdown: redcarpet
+permalink: date
+pygments: true

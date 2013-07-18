@@ -1,0 +1,23 @@
+---
+layout: default
+title: numberoverzero
+---
+
+<!-- <div class="hero" style="background-image: url({{ site.url }}/assets/{{ site.banner }});"></div> -->
+
+<div class="unit grid whole align-center center-on-mobiles">
+  <ul class="posts">
+    {% for post in site.posts %}
+      <li>
+        <div class="title unit golden-large center-on-mobiles">
+          <a href="{{ post.url }}">
+          {{ post.title }}
+          </a>
+        </div>
+        <div class="date unit golden-small center-on-mobiles">
+          ({{ post.date | date_to_string }})
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
