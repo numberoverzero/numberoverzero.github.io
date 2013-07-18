@@ -1,3 +1,15 @@
+/*****************************************************************************/
+/*
+/*
+/* Color scheme from http://www.colourlovers.com/palette/1406717/Manly_Minimalist
+/* Modifications:
+/*    "Summer blues V" #458FB3 changed to #458FE3
+/*
+/*
+/*****************************************************************************/
+
+
+
 html {
   background-color: #030E13;
   font-family: "Yanone Kaffeesatz", Helvetica, sans-serif;
@@ -31,7 +43,7 @@ a:hover {
 }
 
 .posts .date {
-  color: #458585;
+  color: #458FE3;
 }
 
 .posts .title {
