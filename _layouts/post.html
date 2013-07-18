@@ -1,0 +1,13 @@
+---
+layout: default
+---
+
+<div class="wrap grid whole center-on-mobiles">
+  <h2>{{ page.title }}</h2>
+  <p class="meta">{{ page.date | date_to_string }}</p>
+
+  <div class="post">
+    {{ content }}
+  </div>
+</div>
+{% include section-nav.html %}
