@@ -2,25 +2,36 @@
 /*
 /*
 /* Color scheme from http://www.colourlovers.com/palette/1406717/Manly_Minimalist
+/*
+/* Original Pallette:
+/*    Dark:
+/* 030E13 Lagoon Night
+/* 051C28 Twilight Serinade 2
+/*    Mid:
+/* 143748 Raging Storm
+/*    Bright:
+/* 458FB3 Summer blues V
+/* FFFFFF White
+/*
 /* Modifications:
 /*    "Summer blues V" #458FB3 changed to #458FE3
 /*
+/*    Derivatives:
+/* 143E4A Lighter version of 051C28 "Twilight Serinade 2" with less red (for code background)
 /*
 /*****************************************************************************/
-
-
 
 html {
   background-color: #030E13;
   font-family: "Yanone Kaffeesatz", Helvetica, sans-serif;
 }
 
-html, a {
+a, p, h1, h2, h3 {
   color: #FFFFFF;
   text-decoration: none;
 }
 
-a:hover {
+a:hover, hr {
   color: #458FE3;
 }
 
@@ -38,11 +49,7 @@ a:hover {
   font-size: 18px;
 }
 
-.posts a:hover {
-  color: #FFFFFF;
-}
-
-.posts .date {
+.posts, .posts a {
   color: #458FE3;
 }
 
@@ -92,7 +99,6 @@ nav li {
 /* Footer */
 
 footer {
-  background-color: #051C28;
   font-size: 18px;
   margin-top: 40px;
   padding-top: 5px;
@@ -109,34 +115,89 @@ footer .meta a {
 /*
 /*****************************************************************************/
 
+.container {
+  background-color: #051C28;
+}
+
+.highlight pre {
+  /*background-color: #1A2623;*/
+  background-color: #F8F8F8;
+}
+
+/* nav buttons */
+
+.section-nav a, .section-nav span {
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 8px 12px 10px;
+}
+
+.section-nav a:hover {
+  color: #458FE3;
+}
+
+.section-nav .next, .section-nav .prev {
+  position: relative;
+}
+
+.section-nav .next:after, .section-nav .prev:before {
+  font-size: 36px;
+  color: #458FE3;
+  font-weight: 800;
+  text-shadow: 0 1px 0 rgba(255,255,255,.4);
+  position: absolute;
+  top: -7px;
+}
+
+.section-nav .next:after {
+  content: "›";
+  right: 10px;
+}
+
+.section-nav .prev:before {
+  content: "‹";
+  left: 10px;
+}
+
+.section-nav .prev, .section-nav .prev:hover {
+  /*float: left;*/
+  padding-left: 30px;
+}
+
+.section-nav .next, .section-nav .next:hover {
+  /*float: right;*/
+  padding-right: 30px;
+}
+
+.section-nav .disabled {
+  opacity: .5;
+  /*filter: alpha*/
+  cursor: default;
+}
+
+
 /* standard */
+
+/*
 .post pre {
   border: 1px solid #ddd;
   background-color: #eef;
   padding: 0 .4em;
+}
+*/
+
+.post .meta {
+  color: #458FE3;
 }
 
 .post ul, .post ol {
   margin-left: 1.35em;
 }
 
-.post code {
-  border: 1px solid #ddd;
-  background-color: #eef;
-  padding: 0 .2em;
-}
 
 .post pre code {
   border: none;
 }
 
-/* terminal */
-.post pre.terminal {
-  border: 1px solid #000;
-  background-color: #333;
-  color: #FFF;
-}
-
-.post pre.terminal code {
-  background-color: #333;
-}
