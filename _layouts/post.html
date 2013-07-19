@@ -2,12 +2,12 @@
 layout: default
 ---
 
-<div class="wrap grid whole center-on-mobiles">
-  <h2>{{ page.title }}</h2>
-  <p class="meta">{{ page.date | date_to_string }}</p>
-
-  <div class="post">
+<div class="grid container">
+  <div class="post unit whole center-on-mobiles">
+    <p class="meta pull-right">{{ page.date | date_to_string }}</p>
+    <h1>{{ page.title }}</h2>
     {{ content }}
+    <hr />
   </div>
+  {% include section-nav.html %}
 </div>
-{% include section-nav.html %}
