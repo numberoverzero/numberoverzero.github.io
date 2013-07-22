@@ -1,69 +1,46 @@
 /*****************************************************************************/
-/*
-/*
-/* Color scheme from http://www.colourlovers.com/palette/1406717/Manly_Minimalist
-/*
-/* Original Palette:
-/*    Dark:
-/* 030E13 Lagoon Night
-/* 051C28 Twilight Serinade 2
-/*    Mid:
-/* 143748 Raging Storm
-/*    Bright:
-/* 458FB3 Summer blues V
+/* Colors
+/* 030E13 Background
+/* 475E69 Content Box (.content)
 /* FFFFFF White
-/*
-/* Modifications:
-/*    "Summer blues V" #458FB3 changed to #458FE3
-/*
-/*    Derivatives:
-/* 143E4A Lighter version of 051C28 "Twilight Serinade 2" with less red (for code background)
+/* 458FE3 Blue Highlight
 /*
 /*****************************************************************************/
 
 html {
   background-color: #030E13;
-  font-family: "Yanone Kaffeesatz", Helvetica, sans-serif;
+  color: #FFFFFF;
+  font-family: "Old Standard TT", sans-serif;
 }
 
-a, p, h1, h2, h3 {
+a {
   color: #FFFFFF;
   text-decoration: none;
 }
 
-a:hover, hr {
+hr, a:hover {
   color: #458FE3;
 }
 
-/*****************************************************************************/
-/*
-/* Home
-/*
-/*****************************************************************************/
-.posts {
-  list-style-type: none;
+hr {
+  border: 1px solid;
 }
 
-.posts li {
-  line-height: 190%;
-  font-size: 18px;
-}
-
-.posts, .posts a {
+h1, h2, h3 ,h4, h5 {
+  font-family: 'Josefin Slab', serif;
   color: #458FE3;
 }
 
-.posts .title {
-  font-size: 160%;
+
+/*****************************************************************************/
+/*
+/* Meta
+/*
+/*****************************************************************************/
+
+.date {
+  color: #458FE3;
 }
-
-/*****************************************************************************/
-/*
-/* Header, Footer, Contact
-/*
-/*****************************************************************************/
-
-/* Contact */
 
 .meta a {
   font-weight: bold;
@@ -71,7 +48,18 @@ a:hover, hr {
   -webkit-transition: color .25s;
 }
 
-.contact a {
+footer {
+  margin-top: 40px;
+  padding: 5px 0;
+}
+
+footer a {
+  text-decoration: underline;
+}
+
+/* (icons) github, twitter, ... */
+
+.social a {
   display: inline-block;
   font-size: 32px;
   padding: 8px;
@@ -79,52 +67,71 @@ a:hover, hr {
   vertical-align: middle;
 }
 
-/* Header */
-
-.hero {
-  background-size: cover;
-  height: 300px;
-  box-shadow: inset 0 0 30px rgba(0,0,0,.90);
-}
-
-header h1 {
-  font-size: 2em;
-}
-
-nav li {
+.social li {
   display: inline-block;
   list-style-type: none;
 }
 
-/* Footer */
+/*****************************************************************************/
+/*
+/* Index
+/*
+/*****************************************************************************/
 
-footer {
-  font-size: 18px;
-  margin-top: 40px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+.posts {
+  list-style-type: none;
+  line-height: 2em;
+  font-size: 14px;
 }
 
-footer .meta a {
-  text-decoration: underline;
+.posts .date {
+  margin-right: 2em;
 }
 
 /*****************************************************************************/
 /*
-/* Posts
+/* Individual post
 /*
 /*****************************************************************************/
 
-.container {
-  background-color: #051C28;
+.content {
+  background: #2D3235;
 }
 
-.highlight pre {
-  /*background-color: #1A2623;*/
-  background-color: #F8F8F8;
+.content a {
+  color: #458FE3;
 }
 
-/* nav buttons */
+.content + .content {
+  margin-top: 30px;
+}
+
+.post p {
+  line-height: 125%;
+}
+
+.post .highlight {
+  padding: .2em .4em;
+  margin: 0 1em;
+}
+
+.post .highlight code {
+  padding: 0;
+}
+
+.post code {
+  padding: .1em .4em;
+}
+
+.post .highlight, .post pre, .post code {
+  background: #030E13;
+}
+
+/*****************************************************************************/
+/*
+/* Older/newer buttons
+/*
+/*****************************************************************************/
 
 .section-nav a, .section-nav span {
   color: #fff;
@@ -176,28 +183,3 @@ footer .meta a {
   /*filter: alpha*/
   cursor: default;
 }
-
-
-/* standard */
-
-/*
-.post pre {
-  border: 1px solid #ddd;
-  background-color: #eef;
-  padding: 0 .4em;
-}
-*/
-
-.post .meta {
-  color: #458FE3;
-}
-
-.post ul, .post ol {
-  margin-left: 1.35em;
-}
-
-
-.post pre code {
-  border: none;
-}
-

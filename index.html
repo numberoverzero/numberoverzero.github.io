@@ -3,21 +3,19 @@ layout: default
 title: numberoverzero
 ---
 
-<!-- <div class="hero" style="background-image: url({{ site.url }}/assets/{{ site.banner }});"></div> -->
-
-<div class="unit grid whole align-center center-on-mobiles">
-  <ul class="posts">
-    {% for post in site.posts %}
-    <li>
-      <div class="title unit golden-large center-on-mobiles">
+<div class="grid">
+  <div class="unit whole center-on-mobiles">
+    <ul class="posts">
+      {% for post in site.posts %}
+      <li>
+        <span class="date pull-left">({{ post.date | date_to_string }})</span>
         <a href="{{ post.url }}">
-        {{ post.title }}
+          <h1 class="title">
+            {{ post.title }}
+          </h1>
         </a>
-      </div>
-      <div class="date unit golden-small center-on-mobiles">
-        ({{ post.date | date_to_string }})
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
