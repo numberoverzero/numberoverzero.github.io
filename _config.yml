@@ -3,7 +3,6 @@ port: 4000
 markdown: redcarpet
 permalink: date
 pygments: true
-banner: hero.png
 
 twitter: numberoverzero
 linkedin: numberoverzero

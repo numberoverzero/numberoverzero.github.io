@@ -2,12 +2,18 @@
 layout: default
 ---
 
-<div class="grid container">
+<div class="grid content">
   <div class="post unit whole center-on-mobiles">
-    <p class="meta pull-right">{{ page.date | date_to_string }}</p>
-    <h1>{{ page.title }}</h2>
+    <p class="date pull-right">{{ page.date | date_to_string }}</p>
+    <h1>{{ page.title }}</h1>
     {{ content }}
     <hr />
   </div>
   {% include section-nav.html %}
+</div>
+
+<div class="grid content">
+  <div class="comments unit whole center-on-mobiles">
+    <h1></h1>
+  </div>
 </div>
