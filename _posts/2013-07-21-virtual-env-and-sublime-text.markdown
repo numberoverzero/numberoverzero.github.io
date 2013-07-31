@@ -56,13 +56,14 @@ That was the initial motivation, after all.  Since Sublime Text's build system e
 we just edit the python build system to prepend "proj" and we're good to go.  For every project.  Don't touch it.
 
     {
-        "cmd": ["proj", "python", "-u", "$file"],
-      "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
-        "selector": "source.python",
-        "env":
-        {
-            "PYTHONPATH": "$PROJ"
-        }
+      "cmd": ["proj", "python", "-u", "$file"],
+      "file_regex":
+        "^[ ]*File \"(...*?)\", line ([0-9]*)",
+      "selector": "source.python",
+      "env":
+      {
+        "PYTHONPATH": "$PROJ"
+      }
     }
 
 New overhead for using different environments with Sublime Text: **Zero.**
