@@ -46,6 +46,17 @@ h1, h2, h3 ,h4, h5 {
   .show-on-mobiles {
     display: block;
   }
+
+  /* Minimize header's vertical space in tall narrow views */
+  header {
+    margin-bottom: 2em;
+  }
+  header .grid .unit {
+    padding: 0 !important;
+  }
+  header .social {
+    margin: 0;
+  }
 }
 
 /*****************************************************************************/
@@ -61,6 +72,10 @@ h1, h2, h3 ,h4, h5 {
 }
 
 /* (icons) github, twitter, ... */
+
+.social {
+  padding: 0;
+}
 
 .social a {
   display: inline-block;
