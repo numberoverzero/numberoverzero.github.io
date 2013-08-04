@@ -13,17 +13,18 @@ html {
   font-family: "Old Standard TT", sans-serif;
 }
 
-a {
-  color: #FFFFFF;
+a, a:hover, .date {
+  color: #458FE3;
   text-decoration: none;
 }
 
-hr, a:hover {
-  color: #458FE3;
+header a {
+  color: #FFFFFF;
 }
 
-hr {
-  border: 1px solid;
+footer {
+  margin-top: 40px;
+  padding: 5px 0;
 }
 
 h1, h2, h3 ,h4, h5 {
@@ -33,7 +34,7 @@ h1, h2, h3 ,h4, h5 {
 
 /*****************************************************************************/
 /*
-/* Mobile-only
+/* Mobile
 /*
 /*****************************************************************************/
 
@@ -47,30 +48,16 @@ h1, h2, h3 ,h4, h5 {
   }
 }
 
-
 /*****************************************************************************/
 /*
 /* Meta
 /*
 /*****************************************************************************/
 
-.date {
-  color: #458FE3;
-}
-
 .meta a {
   font-weight: bold;
   transition: color .25s;
   -webkit-transition: color .25s;
-}
-
-footer {
-  margin-top: 40px;
-  padding: 5px 0;
-}
-
-footer a {
-  text-decoration: underline;
 }
 
 /* (icons) github, twitter, ... */
@@ -90,32 +77,28 @@ footer a {
 
 /*****************************************************************************/
 /*
-/* Index
+/* Archive
 /*
 /*****************************************************************************/
 
-.posts {
+.archive {
   list-style-type: none;
   line-height: 2em;
   font-size: 14px;
 }
 
-.posts .date {
+.archive .date {
   margin-right: 2em;
 }
 
 /*****************************************************************************/
 /*
-/* Individual post
+/* Post
 /*
 /*****************************************************************************/
 
 .content {
   background: #2D3235;
-}
-
-.content a {
-  color: #458FE3;
 }
 
 .content + .content {
@@ -141,61 +124,4 @@ footer a {
 
 .post .highlight, .post pre, .post code {
   background: #030E13;
-}
-
-/*****************************************************************************/
-/*
-/* Older/newer buttons
-/*
-/*****************************************************************************/
-
-.section-nav a, .section-nav span {
-  color: #fff;
-  font-size: 16px;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 8px 12px 10px;
-}
-
-.section-nav a:hover {
-  color: #458FE3;
-}
-
-.section-nav .next, .section-nav .prev {
-  position: relative;
-}
-
-.section-nav .next:after, .section-nav .prev:before {
-  font-size: 36px;
-  color: #458FE3;
-  font-weight: 800;
-  text-shadow: 0 1px 0 rgba(255,255,255,.4);
-  position: absolute;
-  top: -7px;
-}
-
-.section-nav .next:after {
-  content: "›";
-  right: 10px;
-}
-
-.section-nav .prev:before {
-  content: "‹";
-  left: 10px;
-}
-
-.section-nav .prev, .section-nav .prev:hover {
-  /*float: left;*/
-  padding-left: 30px;
-}
-
-.section-nav .next, .section-nav .next:hover {
-  /*float: right;*/
-  padding-right: 30px;
-}
-
-.section-nav .disabled {
-  opacity: .5;
-  /*filter: alpha*/
-  cursor: default;
 }
