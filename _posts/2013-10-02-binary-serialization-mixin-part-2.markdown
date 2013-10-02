@@ -21,7 +21,7 @@ Part 2: Descriptors
 
 This post will look at how to wrap functions and classes, trying to keep the syntactic overhead low.  Here's the sample implementation we had from the previous post:
 
-{% highlight python %}
+``` python
 class Channel(ScalarSerializable):
     serializable_format = 'uint:8'
     value = 0
@@ -47,13 +47,13 @@ deserialize(color2, s)
 print(color)
 print()
 print(color2)
-{% endhighlight %}
+```
 
 The biggest annoyance by far is that my r, g, b attributes can't be treated like the integers they wrap - I'm forced to set each of their 'value' attributes directly. Worse, any time I add or remove an attribute to the Color class I need to update two places: serializable_attrs and the init function. I want to be able to treat the r, g, b attributes like what they are: ints. But I also want each to be packed into 1 byte since they will only ever have values on the range [0, 255]. Here's what I want.
 
 ### Ideal End Result
 
-{% highlight python %}
+``` python
 class Channel(BASE_CLASS_X):
     serializable_format = 'uint:8'
 
@@ -71,7 +71,7 @@ deserialize(color2, s)
 print(color)
 print()
 print(color2)
-{% endhighlight %}
+```
 
 Making sure we're on the same page, here's what I want out of the above:
 
@@ -94,7 +94,7 @@ The second approach is how Django handles this question, but given the layers of
 
 Descriptors probably aren't too magical within the context of python magic, but for some reason it took me longer to wrap my head around them than metaclasses. The python docs offer a good overview on this topic, but in a nutshell, descriptors are a way to override attribute access for an object in python. Let's start with an example:
 
-{% highlight python %}
+``` python
 class Field:
     def __init__(self, name, default):
         self.name = name
@@ -136,7 +136,7 @@ print()
 print("There are no Field instances in the color's __dict__ either:")
 print(color.__dict__)
 print()
-{% endhighlight %}
+```
 
 Descriptors invert the attribute lookup - when we use color.r, the color instance checks for the variable r and finds a variable with a \_\_get\_\_ function. It passes itself into the get function of the descriptor - in this case, it returns the result of Field.\_\_get\_\_(, self, Color) where is the field instance from the class declaration line "r = Field('r', 100)" and self is the instance of color that we tried to get the r attribute of.
 
@@ -148,7 +148,7 @@ We still haven't addressed the initialization problem, since passing an instance
 
 To address the instantiation problem, we can use the following pattern:
 
-{% highlight python %}
+``` python
 class InitWrapper:
     def __init__(self, cls, *args, **kwargs):
         print("This is InitWrapper's init")
@@ -193,11 +193,11 @@ my_other_new_foo.first = "Second"
 print(my_new_foo.first)
 print(my_other_new_foo.first)
 print()
-{% endhighlight %}
+```
 
 Also, we can create a function that just wraps the class so our initialization can look almost the same as the unwrapped initialization:
 
-{% highlight python %}
+``` python
 from functools import wraps
 
 def f(cls):
@@ -209,11 +209,11 @@ def f(cls):
 a_foo = Foo('John', 'Smith', b='blah')
 foo_factory = f(Foo)('John', 'Smith', b='blah')
 equivalent_foo_factory = InitWrapper(Foo, 'John', 'Smith', b='blah')
-{% endhighlight %}
+```
 
 By combining these two classes, we can get attribute pass-through from the Descriptor protocol, and deferred initialization so that we declare fields as though they were declared on self instead of the class. Here's the final Field class, and currying function f:
 
-{% highlight python %}
+``` python
 from functools import wraps
 
 class Field:
@@ -242,11 +242,11 @@ def f(cls):
     def init(*args, **kwargs):
         return Field(cls, *args, **kwargs)
     return init
-{% endhighlight %}
+```
 
 Using this class, the "Ideal End Result" code would now read:
 
-{% highlight python %}
+``` python
 class Channel(BASE_CLASS_X):
     serializable_format = 'uint:8'
 
@@ -264,7 +264,7 @@ deserialize(color2, s)
 print(color)
 print()
 print(color2)
-{% endhighlight %}
+```
 
 Wrapping the class looks a little strange, but it's still pretty readable - and easy to add wherever it's needed.
 

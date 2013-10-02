@@ -38,7 +38,7 @@ Keeping time and space overhead low suggests we store all of the serialization m
 
 I'll be using the excellent [bitstring][bitstring] package for the value packing and unpacking, and [this recipe][flatten-recipe] for flattening irregular lists.
 
-{% highlight python %}
+``` python
 import bitstring
 import collections
 
@@ -70,7 +70,7 @@ def deserialize(obj, bitstream):
     fmt = obj.serializable_format
     values = bitstream.unpack(fmt)
     obj.deserialize(values)
-{% endhighlight %}
+```
 
 There isn't too much here, but let's try to break it down.  bitstring offers a few ways to pack values, and suggests that the best performance can be had when packing all values at once using a format string.  Therefore, we assume an interface where the object being packed is able to collect all of the values in its attributes (and any of its attributes' serializable attributes)and provide the format string for them.
 
@@ -80,7 +80,7 @@ To build some concrete examples, we'll first create two serializable classes to 
 
 # Building Blocks
 
-{% highlight python %}
+``` python
 class Serializable(base.SerializableMixin):
     '''List of attrs on the class that can be serialized'''
     serializable_attrs = []
@@ -113,7 +113,7 @@ class ScalarSerializable(base.SerializableMixin):
     def deserialize(self, values, offset=0):
         self.value = values[offset]
         return offset + 1
-{% endhighlight %}
+```
 
 At this point we're missing the mark on a lot of the requirements outlined.  A quick rundown:
 
@@ -128,7 +128,7 @@ Before we start trying to fix these we should try using them and pick out the pr
 
 # Basic Example
 
-{% highlight python %}
+``` python
 class Channel(ScalarSerializable):
     serializable_format = 'uint:8'
     value = 0
@@ -154,7 +154,7 @@ deserialize(color2, s)
 print(color)
 print()
 print(color2)
-{% endhighlight %}
+```
 
 Not too bad.  Let's get a list of areas for improvement and how to address each:
 

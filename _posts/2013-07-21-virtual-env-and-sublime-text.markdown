@@ -24,7 +24,7 @@ dispatch based on the location of the file you're running, or where you're runni
 
 ## Project setup
 
-{% highlight bash %}
+``` bash
 # Create a new project folder and a Python 3 environment:
 ~ $ proj init Spoon-Knife python3.3
 
@@ -32,11 +32,11 @@ dispatch based on the location of the file you're running, or where you're runni
 ~/projects $ git clone https://github.com/[username]/Spoon-Knife.git
 ~/projects $ cd Spoon-Knife
 ~/projects/Spoon-Knife $ proj init python3.3
-{% endhighlight %}
+```
 
 ## Usage
 
-{% highlight bash %}
+``` bash
 # Dependencies with pip:
 ~/projects/Spoon-Knife $ proj pip install requests
 
@@ -48,23 +48,25 @@ dispatch based on the location of the file you're running, or where you're runni
 
 # From a different folder:
 ~ $ proj python $PROJ/Spoon-Knife/myscript.py
-{% endhighlight %}
+```
 
 # One build system to rule them all
 
 That was the initial motivation, after all.  Since Sublime Text's build system executes from the directory the script is in,
 we just edit the python build system to prepend "proj" and we're good to go.  For every project.  Don't touch it.
 
-    {
-      "cmd": ["proj", "python", "-u", "$file"],
-      "file_regex":
-        "^[ ]*File \"(...*?)\", line ([0-9]*)",
-      "selector": "source.python",
-      "env":
-      {
-        "PYTHONPATH": "$PROJ"
-      }
-    }
+```
+{
+  "cmd": ["proj", "python", "-u", "$file"],
+  "file_regex":
+    "^[ ]*File \"(...*?)\", line ([0-9]*)",
+  "selector": "source.python",
+  "env":
+  {
+    "PYTHONPATH": "$PROJ"
+  }
+}
+```
 
 New overhead for using different environments with Sublime Text: **Zero.**
 

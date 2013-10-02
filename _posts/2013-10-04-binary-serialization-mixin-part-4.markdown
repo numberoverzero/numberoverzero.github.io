@@ -56,7 +56,7 @@ def f(cls):
 
 ### DeclarativeMetaclass class
 
-{% highlight python %}
+``` python
 import collections
 noop_init = lambda *a, **kw: None
 
@@ -91,7 +91,7 @@ class DeclarativeMetaclass(type):
             attrs['__str__'] = str_
 
         return super().__new__(cls, name, bases, attrs)
-{% endhighlight %}
+```
 
 Pretty good, but there's no serialization logic in there. Let's change that.
 
@@ -99,7 +99,7 @@ Pretty good, but there's no serialization logic in there. Let's change that.
 
 From the beginning of [part three][part-3], we wanted to be able to do the following:
 
-{% highlight python %}
+``` python
 class Channel(BASE_CLASS_X):
     serializable_format = 'uint:8'
 
@@ -110,25 +110,25 @@ class Color(BASE_CLASS_Y):
 
 color = Color(r=201, g=202, b=203)
 color2 = Color()
-{% endhighlight %}
+```
 
 So far we've got the attribute declaration down for the Color class, but we haven't incorporated the serializable\_format field. Let's change that. We're going to add this next bit to the \_\_new\_\_ function right after the chunk where declared\_fields are set up:
 
-{% highlight python %}
+``` python
 serial_fields = collections.OrderedDict()
 for attr_name, attr_val in declared_fields.items():
     if isinstance(attr_val, SerializableMixin):
         serial_fields[attr_name] = attr_val
 attrs['_serial_fields'] = serial_fields
-{% endhighlight %}
+```
 
 Look familiar? Almost the same format as the declared\_fields setup above, but we're sorting out from those fields, the ones that implement the SerializableMixin interface. Now we can create the full serial\_format string for our class (since it's going to be made up of the format strings of all its attributes):
 
-{% highlight python %}
+``` python
 fmt_gen = (f.serial_format for f in serial_fields.values())
 serial_format = ', '.join(fmt_gen)
 attrs['serial_format'] = serial_format
-{% endhighlight %}
+```
 
 Woohoo! Now we don't have to calculate that again - when we serialize the class, we'll have the complete format string to hand to bitstring for packing, which is a huge gain over packing value by value.
 
@@ -138,7 +138,7 @@ That's all for the metaclass - we don't need to touch it again. It's done plenty
 
 But we're missing two thirds of the SerializableMixin interface - we don't have serializable_values or deserialize. Enter the Serializable base class:
 
-{% highlight python %}
+``` python
 class Serializable(SerializableMixin, metaclass=SerializableMetaclass):
     @property
     def serial_values(self):
@@ -151,11 +151,11 @@ class Serializable(SerializableMixin, metaclass=SerializableMetaclass):
             offset = field.deserialize(self, values, offset)
         return offset
 
-{% endhighlight %}
+```
 
 Notice that although this class doesn't declare any fields, the metaclass \_\_new\_\_ will be run when any subclass is defined, so fields that the inheriting class defines will be used in the serial_values function. flatten is the following utility function, which basically turns arbitrarily nested sequences into a single flat list:
 
-{% highlight python %}
+``` python
 import collections
 
 def flatten(l, ltypes=collections.Sequence):
@@ -169,7 +169,7 @@ def flatten(l, ltypes=collections.Sequence):
         if l:
             yield l.pop(0)
 
-{% endhighlight %}
+```
 
 So for a class deriving from Serializable, the serial\_values function (property, really) will walk through the fields' serial\_values and create a flat list - whose order will exactly match the flattened serial\_format string we constructed in the metaclass! Nice!
 
@@ -179,7 +179,7 @@ deserialize will do the same sort of re-nesting - values is an array of objects 
 
 There's one final problem to tackle before we're done: The Field object doesn't inherit from SerializableMixin, which means it doesn't support serial\_format, serial\_values, or deserialize. Let's clean that up quick, with the following two classes:
 
-{% highlight python %}
+``` python
 passthrough = lambda v: v
 
 class ClassWrapperField(Field, SerializableMixin):
@@ -216,7 +216,7 @@ class RawSerialField(Field, SerializableMixin):
     @property
     def instance(self):
         return self.default
-{% endhighlight %}
+```
 
 RawSerialField allows us to make the basic building blocks - ints, bools, etc. ClassWrapperField is used on any class that already subclasses SerializableMixin.
 
@@ -227,7 +227,7 @@ This is why the Serializable class passes self as its first argument in the seri
 
 Here's everything together, with the f function improved a bit to handle both serializable classes and raw fields. This also includes a bunch of code that we haven't seen since parts one or two, such as SerializableMixin and the serialize/deserialize functions. You can also grab everything below as a [gist][full-gist].
 
-{% highlight python %}
+``` python
 from functools import wraps
 import collections
 import bitstring
@@ -388,13 +388,13 @@ class Serializable(SerializableMixin, metaclass=DeclarativeMetaclass):
         for field in self._serial_fields.values():
             offset = field.deserialize(self, values, offset)
         return offset
-{% endhighlight %}
+```
 
 # Try it out
 
 Here are some serializable classes, with some helpers for the field definitions.
 
-{% highlight python %}
+``` python
 uint8 = lambda: f(format='uint:8', default=0)
 boolean = lambda: f(format='uint:1', default=False,
                     to_serial=int, from_serial=bool)
@@ -414,11 +414,11 @@ class Tile(Serializable):
     enabled = boolean()
     color = f(Color)(122, 123, 124, 125)
     elite = boolean()
-{% endhighlight %}
+```
 
 And to put those classes through their paces:
 
-{% highlight python %}
+``` python
 t = Tile()
 print("Original tile:")
 print(t)
@@ -446,7 +446,7 @@ print("The following should be equal:")
 print(t)
 print(t2)
 print()
-{% endhighlight %}
+```
 
 The above should output:
 
@@ -473,7 +473,7 @@ Tile(enabled=True, color=Color(r=122, g=100, b=124, a=100), elite=False)
 
 At the beginning I mentioned some spoilers. In the next part I'm going to talk about what happened to goal 3: serialization shouldn't get in the way. Looking at the demo above, it certainly has. We're forced to provide defaults, we're using currrying to defer instantiation, all because we need the format strings at class creation. Wouldn't it be great if we could just... add serialization to an already existing class without subclassing anything, just passing it a format string to say where which bits go? That's the goal of the most recent iteration of the serialization package. Here's what it looks like to use that:
 
-{% highlight python %}
+``` python
 from pyserializable import autoserializer, Serializer
 
 s = Serializer()
@@ -505,7 +505,7 @@ other_bill = s.deserialize(Person, bill_data)
 #Deserialize into existing instance
 another_bill = Person()
 s.deserialize(another_bill, bill_data)
-{% endhighlight %}
+```
 
 Looks much better without all those declarative fields, I think. But it was a fun journey to see what we would get out of it all :)
 
