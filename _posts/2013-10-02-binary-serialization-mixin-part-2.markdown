@@ -270,6 +270,7 @@ Wrapping the class looks a little strange, but it's still pretty readable - and 
 
 That's it for part 2. We've got a formula for a low-overhead syntax that allows us to use the full initialization signature of an attribute at class definition while still allowing per-instance versions of those variables, which puts us in a good spot when we use metaclasses to generate serialization strings. We haven't done any work on sane defaults for built-in classes like int. I suspect those options will become clear once we have a working declarative metaclass to get at our Field instances.  [Next up: Metaclasses][part-3].
 
+[origami]: https://github.com/numberoverzero/origami
 [part-1]: {% post_url 2013-10-01-binary-serialization-mixin-part-1 %}
 [part-2]: {% post_url 2013-10-02-binary-serialization-mixin-part-2 %}
 [part-3]: {% post_url 2013-10-03-binary-serialization-mixin-part-3 %}
