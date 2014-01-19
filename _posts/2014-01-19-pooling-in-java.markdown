@@ -58,25 +58,25 @@ These should be somewhat straightforward.  This is used when the pool runs out o
 
 ``` java
 public class PoolBuffer<E extends Poolable<E>> {
-    private E head;
+    private E top;
 
     public PoolBuffer() {
-        head = null;
+        top = null;
     }
 
-    public E insert(E e) {
-        e.setNext(head);
-        head = e;
-        return head;
+    public E push(E e) {
+        e.setNext(top);
+        top = e;
+        return top;
     }
 
     public E peek() {
-        return head;
+        return top;
     }
 
     public E pop() {
-        E tmp = head;
-        head = head.getNext();
+        E tmp = top;
+        top = top.getNext();
         return tmp;
     }
 }
@@ -91,9 +91,9 @@ public class Pool<E extends Poolable<E>> {
 
     private final PoolBuffer<E> buffer;
     private final PoolBehavior behavior;
-    private final Callable<? extends E> factory;
+    private final Callable<E> factory;
 
-    public Pool(int size, PoolBehavior behavior, Callable<? extends E> factory) {
+    public Pool(int size, PoolBehavior behavior, Callable<E> factory) {
         if (size < 1) {
             throw new IllegalArgumentException("Invalid size " + size);
         }
@@ -103,9 +103,9 @@ public class Pool<E extends Poolable<E>> {
 
         // Keep a reference to the first element inserted (end of the list) so
         // that it can refer to the head when we're done generating elements
-        E end = buffer.insert(create());
+        E end = buffer.push(create());
         for (int i = 0; i < size - 1; i++) {
-            buffer.insert(create());
+            buffer.push(create());
         }
         end.setNext(buffer.peek());
     }
@@ -139,7 +139,7 @@ public class Pool<E extends Poolable<E>> {
             return;
         }
         assert !e.isActive();
-        buffer.insert(e);
+        buffer.push(e);
     }
 }
 ```
