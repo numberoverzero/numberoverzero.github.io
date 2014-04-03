@@ -4,6 +4,6 @@ markdown: redcarpet
 permalink: date
 pygments: true
 
-github: numberoverzero
+github_username: numberoverzero
 feedburner: numberoverzero
 email: joe.mcross@gmail.com
