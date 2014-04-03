@@ -79,10 +79,10 @@ h1, h2, h3 ,h4, h5 {
 
 .social a {
   display: inline-block;
-  font-size: 32px;
-  padding: 8px;
   text-align: center;
   vertical-align: middle;
+  font-size: 32px;
+  padding: 8px;
 }
 
 .social li {
@@ -92,17 +92,17 @@ h1, h2, h3 ,h4, h5 {
 
 /*****************************************************************************/
 /*
-/* Archive
+/* Post list
 /*
 /*****************************************************************************/
 
-.archive {
+.list {
   list-style-type: none;
   line-height: 2em;
   font-size: 14px;
 }
 
-.archive .date {
+.list .date {
   margin-right: 2em;
 }
 

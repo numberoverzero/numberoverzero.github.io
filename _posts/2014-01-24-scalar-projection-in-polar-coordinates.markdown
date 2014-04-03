@@ -27,4 +27,4 @@ This one's short, but I wanted to try out some MathJax.  Some definitions we'll 
 
 ## Why?
 
-I'm doing a bunch of work with angles between vectors and projecting vectors back and forth.  Because sin and cos are pre-computed and only require indexing into the table, this is a fast way to compute the scalar projection.  It's less useful when working primarily in cartesian coordinates, since the length calculation (which includes a square root) still needs to happen.
+I'm doing a bunch of work with angles between vectors and projecting vectors back and forth.  Because sin and cos are pre-computed and only require indexing into the array, this is a fast way to compute the scalar projection.  It's less useful when working primarily in cartesian coordinates, since the length calculation (which includes a square root) still needs to happen.

@@ -1,17 +1,21 @@
 <header>
   <div class="grid meta">
-    <div class="unit half center-on-mobiles">
-      <h1><a href="{{ site.baseurl }}">number<br />over<br />zero</a></h1>
+    <div class="unit half align-left center-on-mobiles">
+      <h1>number<br />over<br />zero</h1>
     </div>
     <nav class="unit half align-right center-on-mobiles">
-      <ul class="social">
+      <ul class="social icons">
         {% if site.github %}<li><a href="http://github.com/{{ site.github }}/"><i class="icon-github"></i></a></li>{% endif %}
         {% if site.twitter %}<li><a href="http://twitter.com/{{ site.twitter }}/"><i class="icon-twitter"></i></a></li>{% endif %}
         {% if site.linkedin %}<li><a href="http://www.linkedin.com/in/{{ site.linkedin }}/"><i class="icon-linkedin"></i></a></li>{% endif %}
         {% if site.email %}<li><a href="mailto:{{ site.email }}"><i class="icon-envelope"></i></a></li>{% endif %}
         {% if site.feedburner %}<li><a href="http://feeds.feedburner.com/{{ site.feedburner }}"><i class="icon-rss"></i></a></li>{% endif %}
       </ul>
-      <a href="{{ site.baseurl }}archive">Archive</a>
+      <a href="{{ site.baseurl }}">Home</a>
+      •
+      <a href="{{ site.baseurl }}posts">Posts</a>
+      •
+      <a href="{{ site.baseurl }}demos">Demos</a>
     </nav>
   </div>
 </header>
