@@ -12,10 +12,4 @@ layout: nil
         <loc>{{ site.url }}{{ post.url }}</loc>
     </url>
     {% endfor %}
-
-    {% for demo in site.categories.demos %}
-    <url>
-        <loc>{{ site.url }}{{ demo.url }}</loc>
-    </url>
-    {% endfor %}
 </urlset>
