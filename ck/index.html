@@ -222,6 +222,17 @@
 <script>
 'use strict';
 
+// http://stackoverflow.com/a/2648463
+String.prototype.format = String.prototype.f = function() {
+    var s = this,
+        i = arguments.length;
+
+    while (i--) {
+        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+    }
+    return s;
+};
+
 var name = '',
     grade = 'NM',
     results = [],
@@ -351,7 +362,8 @@ function update_results() {
 }
 
 function render_results() {
-  var el = function(s) { return function(e, classes = []) { return '<'+s+' class="' + classes.join(' ') + '" >' + e + '</'+s+'>';}; };
+
+  var el = function(s) { return function(e, c) { return '<{0} class="{1}">{2}</{0}>'.format(s,(c || []).join(' '),e); }; };
   var td = el('td'),
       tr = el('tr');
   var rows = [];
