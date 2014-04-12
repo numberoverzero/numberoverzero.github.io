@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Pricer</title>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 
@@ -20,75 +21,78 @@
 <body>
 <script type="text/javascript" src="/ck/data.js"></script>
 <style>
-.card-input {
-  position: relative;
-  display: table;
-}
 
-.card-input > div {
-  display: table-cell;
-  padding-right: 8px;
-  vertical-align: top;
-}
-
-.card-input {
-  .btn-group, .btn-group-vertical {
-        vertical-align: inherit;
-    }
-}
-
-fieldset {
-  padding-bottom: 30px;
-}
-
-.container {
-  padding-top: 30px;
-}
-
-.settings {
-  margin-top: 5px;
-  border: 1px solid rgb(221, 221, 221);
-}
-
-.big-input {
-  font-size: 37px;
-}
-
-.big-input input, .big-input .btn{
-    font-size: 37px;
-    padding: 20px;
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+.huge-input input, .huge-input .btn{
+    font-size: 1.3em;
+    padding: 0.5em;
     height: auto;
     line-height: normal;
 }
 
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .huge-input input, .huge-input .btn{
+    font-size: 1.7em;
+    padding: 0.5em;
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .huge-input input, .huge-input .btn{
+    font-size: 2.2em;
+    padding: 0.5em;
+  }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .huge-input input, .huge-input .btn{
+    font-size: 2.65em;
+    padding: 0.5em;
+  }
+}
+
 #input-panel {
   margin-top: 50px;
+  padding: 19px;
 }
 
-#collapse-settings {
-  background-image: none;
+.not-on-sell-list {
+  font-weight: bold;
 }
 
+.big-input {
+  font-size: 2em;
+}
+
+.med-input {
+  font-size: 1.5em;
+}
 </style>
 
 <!--       -->
 <!-- INPUT -->
 <!--       -->
-<div id="input-panel" class="well well-lg container">
-  <div class="row big-input">
+<div id="input-panel" class="container">
+  <div class="row huge-input">
     <div class="col-md-5">
-      <input type="text" class="form-control" id="search-card-name" placeholder="Force of Will">
+      <input type="text" class="form-control center-block" id="search-card-name" placeholder="Force of Will">
     </div>
-    <div class="col-md-5">
-      <div class="btn-toolbar btn-group" data-toggle="buttons">
-        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-NM"> NM</label>
-        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-EX"> EX</label>
-        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-VG"> VG</label>
-        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-G"> G</label>
+    <div class="col-md-4">
+      <div class="btn-group btn-group-justified" data-toggle="buttons">
+        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-NM">NM</label>
+        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-EX">EX</label>
+        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-VG">VG</label>
+        <label class="btn btn-primary"><input type="radio" name="input-card-grade" id="search-card-grade-G">G</label>
       </div>
     </div>
-    <div class="col-md-1">
-      <button class="btn btn-primary" data-toggle="collapse" data-target="#collapse-settings">Settings</span>
+    <div class="col-md-3">
+      <button class="btn btn-primary center-block" data-toggle="collapse" data-target="#collapse-settings">
+        <span>Settings</span>
+      </button>
     </div>
   </div>
 </div>
@@ -97,24 +101,22 @@ fieldset {
 <!-- SETTINGS -->
 <!--          -->
 <div class="row">
-  <div id="collapse-settings" class="well col-md-10 col-md-offset-1 panel-collapse collapse in">
+  <div id="collapse-settings" class="col-md-8 col-md-offset-2 panel-collapse collapse in">
     <div class="panel-body">
       <fieldset>
         <legend>Grading & Scaling</legend>
         <div class="form-group">
-
-          <div class="col-sm-4">
+          <div class="col-md-3">
             <label>Global Price Modifier</label>
-            <div style="font-size: 2em;"><span class="editable" data-type="text" data-value="80" id="pricing-global_scale"></span>%</div>
+            <div class="big-input"><span class="editable" data-type="text" data-value="80" id="pricing-global_scale"></span>%</div>
             <span class="help-block">Modifier for lower end of offer range</span>
 
             <label>Non-buylist Modifier</label>
-            <div style="font-size: 2em;"><span class="editable" data-type="text" data-value="85" id="pricing-non_buylist_scale"></span>%</div>
+            <div class="big-input"><span class="editable" data-type="text" data-value="65" id="pricing-non_buylist_scale"></span>%</div>
             <span class="help-block">Adjustment (from NM sell price) for cards not on the buylist</span>
-
           </div>
 
-          <div class="col-sm-5">
+          <div class="col-md-6 col-md-offset-2">
             <label>Graduated Condition Scale</label>
             <table class="table table-bordered">
               <thead></thead>
@@ -147,52 +149,51 @@ fieldset {
             </table>
             <span class="help-block">Edit values to adjust condition graduation</span>
           </div>
+          <div class="col-md-4" />
         </div>
-        </fieldset>
+      </fieldset>
 
-        <fieldset>
-          <legend>Pricing & Rounding</legend>
-          <div class="form-group">
-            <div class="col-sm-4">
-                <label class="checkbox">
-                  <input type="checkbox" id="rounding-enable">Enable rounding
-                </label>
-                <label class="checkbox">
-                  <input type="checkbox" id="rounding-low_price_only">
-                  Only show lower estimates
-                </label>
-            </div>
-
-            <div class="col-sm-4">
-              <label>Rounding cutoff</label>
-              <div class="input-group" style="font-size: 1.5em;">
-                $<span class="editable" data-type="text" data-value="0.80" id="rounding-cutoff"></span>
-              </div>
-              <span class="help-block">Minimum value that will be rounded</span>
-            </div>
-
-            <div class="col-sm-4">
-              <label>Rounding precision</label>
-              <div class="input-group" style="font-size: 1.5em;">
-                $<span class="editable" data-type="text" data-value="0.50" id="rounding-precision"></span>
-              </div>
-              <span class="help-block">The nearest amount to round to</span>
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Filters</legend>
-          <div class="form-group">
-            <div class="col-sm-4">
+      <fieldset>
+        <legend>Pricing & Rounding</legend>
+        <div class="form-group">
+          <div class="col-md-4">
               <label class="checkbox">
-                <input type="checkbox" id="filters-sell_list_only">Only show cards on the sell list
+                <input type="checkbox" id="rounding-enable">Enable rounding
               </label>
-            </div>
-            <div class="col-sm-4">
-            </div>
+              <label class="checkbox">
+                <input type="checkbox" id="rounding-low_price_only">
+                Only show lower estimates
+              </label>
           </div>
-        </fieldset>
+
+          <div class="col-md-4">
+            <label>Rounding cutoff</label>
+            <div class="input-group med-input">
+              $<span class="editable" data-type="text" data-value="0.80" id="rounding-cutoff"></span>
+            </div>
+            <span class="help-block">Minimum value that will be rounded</span>
+          </div>
+
+          <div class="col-md-4">
+            <label>Rounding precision</label>
+            <div class="input-group med-input">
+              $<span class="editable" data-type="text" data-value="0.50" id="rounding-precision"></span>
+            </div>
+            <span class="help-block">The nearest amount to round to</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Filters</legend>
+        <div class="form-group">
+          <div class="col-md-4">
+            <label class="checkbox">
+              <input type="checkbox" id="filters-sell_list_only">Only show cards on the sell list
+            </label>
+          </div>
+        </div>
+      </fieldset>
     </div>
   </div>
 </div>
@@ -227,7 +228,7 @@ var name = '',
     options = {
       'pricing': {
         'global_scale': 80,
-        'non_buylist_scale': 85,
+        'non_buylist_scale': 65,
         'graduated_condition': {
           'low': {
             'EX': 75,
@@ -298,14 +299,10 @@ $( document ).ready(function(){
     widgets: [ "uitheme" ]
   });
 
-  // Initialize results
-  update_results();
-
   // Hook up input grade buttons
   $(document).on('change', 'input:radio[id^="search-card-grade"]', function (event) {
     grade = id($(this)).match(/search-card-grade-(.*)/)[1];
-    console.log('set grade to ' + grade);
-    recalculate_prices();
+    render_results();
   });
 
   // Hook up checkboxes
@@ -316,7 +313,6 @@ $( document ).ready(function(){
     var field = match[2];
     var old_value = options[category][field];
     options[category][field] = this.checked;
-    console.log(category +" | "+ field +" | "+ this.checked +" | "+ "(old) " + old_value);
     if(category === 'rounding') {
       render_results();
     } else if (category === 'filters') {
@@ -325,10 +321,13 @@ $( document ).ready(function(){
   });
 
   // Hook up text editing
-  $('#search-card-name').bind('input', update_search_text);
+  $('#search-card-name').bind('input propertychange', update_search_text);
 
   // Default condition NM
   $('#search-card-grade-NM').click();
+
+  // Re-load text
+  $('#search-card-name').focus().trigger('input');
 
 });
 
@@ -352,18 +351,19 @@ function update_results() {
 }
 
 function render_results() {
-  var el = function(s) { return function(e) { return '<'+s+'>\n' + e + '</'+s+'>';}; };
+  var el = function(s) { return function(e, classes = []) { return '<'+s+' class="' + classes.join(' ') + '" >' + e + '</'+s+'>';}; };
   var td = el('td'),
       tr = el('tr');
   var rows = [];
   for (var i=0; i < results.length; i++) {
     var card = results[i];
+    var classes = card.s ? [] : ["bg-danger", "not-on-sell-list"];
     rows.push(tr(
       td(render_name(card.n)) +
       td(render_edition(card.e)) +
       td(render_sell_list(card.s)) +
       td(render_price(card.p, card.s))
-    ));
+    , classes));
   }
 
   // So that each addition doesn't reflow the page, construct the entire <tbody> and then replace the existing one
@@ -444,7 +444,6 @@ function persist_editable_value(t, value) {
         { // price scales
           r: /pricing-(global_scale|non_buylist_scale)/,
           f: function(m) {
-            console.log("scale " + m);
             var conditions = options.pricing;
             var field = m[1];
             conditions[field] = value;
@@ -453,7 +452,6 @@ function persist_editable_value(t, value) {
         { // graduated price scale
           r: /price-grad-(low|med|high)-(EX|VG|G)/,
           f: function(m) {
-            console.log("graduated " + m);
             var conditions = options.pricing.graduated_condition;
             var tier = m[1];
             var grade = m[2];
@@ -463,7 +461,6 @@ function persist_editable_value(t, value) {
         { // rounding
           r: /rounding-(cutoff|precision)/,
           f: function(m) {
-            console.log("rounding " + m);
             var field = m[1];
             options.rounding[field] = value;
           }
@@ -475,7 +472,6 @@ function persist_editable_value(t, value) {
     var match = id_.match(m.r);
     if(match) {
       m['f'](match);
-      console.log('stored value ' + value);
       return;
     }
   }
@@ -483,7 +479,6 @@ function persist_editable_value(t, value) {
 
 function update_search_text() {
   name = $.trim($(this).val());
-  console.log(name);
 
   // too short for meaningful results, wait for third character
   if(name.length < 3) {
@@ -500,27 +495,16 @@ function update_search_text() {
   }
 }
 
-function recalculate_prices() {
-  if(results.length == 0) {
-    console.log('no results to recalculate.');
-  } else {
-    console.log('recalculated prices');
-  }
-  render_results();
-}
-
 function filter_results() {
   // Safe clear an array with possible other references
   // see http://stackoverflow.com/a/1232046
   results.length = 0;
 
-  console.log('re-filtering results');
   var matcher = new RegExp(name, "gi");
   for(var i=0;i < data.cards.length; i++) {
     var card = data.cards[i];
     if(matcher.test(card.n)) {
       if(card.s == true || !(options.filters.sell_list_only)) {
-        console.log('card ' + card.n + ' matched filter ' + name + '.');
         results.push(card);
       }
     }
