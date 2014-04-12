@@ -362,7 +362,6 @@ function update_results() {
 }
 
 function render_results() {
-
   var el = function(s) { return function(e, c) { return '<{0} class="{1}">{2}</{0}>'.format(s,(c || []).join(' '),e); }; };
   var td = el('td'),
       tr = el('tr');
@@ -512,15 +511,13 @@ function filter_results() {
   // see http://stackoverflow.com/a/1232046
   results.length = 0;
 
-  var matcher = new RegExp(name, "gi");
-  for(var i=0;i < data.cards.length; i++) {
-    var card = data.cards[i];
-    if(matcher.test(card.n)) {
-      if(card.s == true || !(options.filters.sell_list_only)) {
-        results.push(card);
-      }
+  var r = new RegExp(name, "i");
+  data.cards.forEach(function(c) {
+    if(r.test(c.n) && (c.s == true || !(options.filters.sell_list_only))) {
+      results.push(c);
     }
-  }
+  });
+
   update_results();
 }
 </script>
