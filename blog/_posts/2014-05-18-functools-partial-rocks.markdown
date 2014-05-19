@@ -150,6 +150,8 @@ class Chain(object):
         return self.__chain[name](*args, **kwargs)
 ```
 
+[Gist][chain-gist]
+
 The magic is still there, in the `__compile` method.  Note that this is taking
 a name argument instead of "before_operation" which allows it to build a chain
 for any function that a particular set of objects has - or some subset may
@@ -185,3 +187,4 @@ chain.after_operation
 
 
 [request-handlers]: {% post_url 2013-12-03-easier-request-handlers %}
+[chain-gist]: https://gist.github.com/numberoverzero/c668f2f59817b8432770
