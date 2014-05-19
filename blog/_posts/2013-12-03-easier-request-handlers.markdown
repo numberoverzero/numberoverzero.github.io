@@ -74,18 +74,18 @@ I got pretty confused trying to write this decorator and some of its edge cases,
 
 Of interest, there's the `except:` block that throws **everything** from the rest of the chain's execution **back into the generator**, which is important because the generator is really the decorated fuction - without that, the exception propagates out of the wrapper since the wrapped function yielded control.
 
-## This is basically contextmanager.
+## Isn't this just contextmanager?
 
-Not quite - contextmanager is almost perfect for this, except that we won't always run the next handler.  That makes the following:
+Not quite - contextmanager is almost perfect for this, except that we won't always run the next handler.  If we used contextmanager, it would read:
 
 ``` python
 with handler(context):
     next_handler(context)
 ```
 
-less than ideal, because we'll enter the block and then call the next handler.  That's not going to work for our caching handler, and if our function doesn't `yield` then @contextmanager throws a `RuntimeError` because we didn't yield for the end of the `__enter__` block that it's trying to set up for us.
+This won't work, because we'll **always** call the next handler.  A caching handler, which is trying to avoid invoking the rest of the handlers, won't yield if a cached version eists.  @contextmanager would throw a `RuntimeError` because the function doesn't yield for the end of the `__enter__` block that it's trying to set up.
 
-It's also worse, because we need to know about `next_handler` and how to call it - and when we're nesting the handlers inside each other, that callable needs to be set up to know the next handler in the chain, and the next after it, (and the next after it..) when we're only passing the context in.
+Making things worse, we need to know about `next_handler` and how to call it, but we're nesting the handlers inside each other.  That callable needs to be set up to know the next handler in the chain, and the next after it, (and the next after it..) when we're only passing the context in.
 
 Clever transition into...
 
@@ -124,7 +124,7 @@ I dislike that each Logger has to keep track of not only the next logger in the 
 
 ## Flip it inside out
 
-The almost-valid-python is:
+The almost-valid-python
 
 ``` python
 def execute(context, handlers):
@@ -133,11 +133,11 @@ def execute(context, handlers):
         index += 1
         if index >= len(handlers):
             return
-        handlers[index](context, self)
+        handlers[index](context, next_handler)
     next_handler(context)
 ```
 
-Where a handler has the call signature
+Where a handler has the signature
 
 ``` python
 def some_handler(context, next_handler):
