@@ -2,7 +2,7 @@ destination: ./_site
 port: 4000
 markdown: redcarpet
 permalink: date
-pygments: true
+highlighter: pygments
 
 github_username: numberoverzero
 feedburner: numberoverzero
