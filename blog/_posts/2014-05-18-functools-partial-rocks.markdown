@@ -118,6 +118,8 @@ iteration.
 
 # Generalize it
 
+
+
 ``` python
 noop = lambda *a, **kw: None
 
@@ -150,7 +152,8 @@ class Chain(object):
         return self.__chain[name](*args, **kwargs)
 ```
 
-[Gist][chain-gist]
+[Gist][chain-gist] (e: the [newer version][pyservice-chain] also handles
+\_\_call\_\_ properly)
 
 The magic is still there, in the `__compile` method.  Note that this is taking
 a name argument instead of "before_operation" which allows it to build a chain
@@ -161,10 +164,10 @@ would leave next_obj as noop, and invoking that partial would do nothing.
 Note that compile and invoke are private to reduce the chance of a name
 collision, since functions are bound to the chain in __getattr__.
 
-Let's talk about `__getattr__` a bit.  First, a partial is built for __invoke,
+Let's talk about `__getattr__` a bit.  First, a partial is built for \_\_invoke,
 so that the name doesn't need to be passed again.  Then, that function is bound
 to the chain object as the passed name, so that further calls will avoid the
-compile and __getattr__ overhead.
+compile and \_\_getattr\_\_ overhead.
 
 ``` python
 chain = Chain(some_objects)
@@ -188,3 +191,4 @@ chain.after_operation
 
 [request-handlers]: {% post_url 2013-12-03-easier-request-handlers %}
 [chain-gist]: https://gist.github.com/numberoverzero/c668f2f59817b8432770
+[pyservice-chain]: https://github.com/numberoverzero/pyservice/blob/master/pyservice/common.py#L59
