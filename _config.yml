@@ -7,3 +7,6 @@ highlighter: pygments
 github_username: numberoverzero
 feedburner: numberoverzero
 email: joe.mcross@gmail.com
+
+gems:
+  - jekyll-sitemap
