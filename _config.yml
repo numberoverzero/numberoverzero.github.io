@@ -1,6 +1,6 @@
 destination: ./_site
 port: 4000
-markdown: redcarpet
+markdown: kramdown
 permalink: date
 highlighter: pygments
 
