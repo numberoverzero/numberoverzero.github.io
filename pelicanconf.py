@@ -4,7 +4,12 @@
 
 AUTHOR = "numberoverzero"
 SITENAME = "numberoverzero"
-SITEURL = ""
+SITEURL = "http://localhost:8000"
+
+ARCHIVES_SAVE_AS = "posts/index.html"
+ARTICLE_URL = "posts/{date:%Y}/{date:%m}/{date:%d}/{slug}"
+ARTICLE_SAVE_AS = "posts/{date:%Y}/{date:%m}/{date:%d}/{slug}/index.html"
+YEAR_ARCHIVE_SAVE_AS = "posts/{date:%Y}/index.html"
 
 DELETE_OUTPUT_DIRECTORY = True
 OUTPUT_RETENTION = ["static", "static/style.css"]
@@ -21,22 +26,11 @@ TIMEZONE = "US/Pacific"
 DEFAULT_LANG = "en"
 DEFAULT_DATE_FORMAT = "%Y-%m-%d"
 
-# Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
-
-# Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
-
-# Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
 
 DEFAULT_PAGINATION = False
 
@@ -48,7 +42,6 @@ PYGMENTS_RST_OPTIONS = {
 #RELATIVE_URLS = True
 
 
-# TESTING
 PLUGINS = ["grits_plugin"]
 
 
