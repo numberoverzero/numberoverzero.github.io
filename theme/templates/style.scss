@@ -1,0 +1,189 @@
+// Solarized colors
+//$base03:     #002b36;
+//$base02:     #073642;
+//$base01:     #586e75;
+//$base00:     #657b83;
+//$base0:      #839496;
+//$base1:      #93a1a1;
+//$base2:      #eee8d5;
+//$base3:      #fdf6e3;
+//$yellow:     #b58900;
+//$orange:     #cb4b16;
+//$red:        #dc322f;
+//$magenta:    #d33682;
+//$violet:     #6c71c4;
+//$blue:       #268bd2;
+//$cyan:       #2aa198;
+//$green:      #859900;
+
+// Config =====================================================================
+
+// from paraiso-dark Name.Function
+$accent-color: #06b6ef;
+
+// Utilities ==================================================================
+
+// Grid from http://codepen.io/numberoverzero/pen/EPJVNg
+@mixin grid-layout($prefix, $flex-direction) {
+  $j: justify-content;
+  $a: align-items;
+  $horizontal-align: if($flex-direction == row, $j, $a);
+  $vertical-align: if($flex-direction == row, $a, $j);
+
+  flex-direction: $flex-direction;
+
+  & > .#{$prefix}-left     { #{$horizontal-align}: flex-start; }
+  & > .#{$prefix}-center-h { #{$horizontal-align}: center;     }
+  & > .#{$prefix}-right    { #{$horizontal-align}: flex-end;   }
+
+  & > .#{$prefix}-top      { #{$vertical-align}: flex-start;   }
+  & > .#{$prefix}-center-v { #{$vertical-align}: center;       }
+  & > .#{$prefix}-bottom   { #{$vertical-align}: flex-end;     }
+}
+
+@mixin grid($module-prefix, $alignment-prefix) {
+  .#{$module-prefix} {
+    display: flex;
+    flex: 1;
+    flex-direction: inherit;
+  }
+  .#{$module-prefix}-h { @include grid-layout($alignment-prefix, row); }
+  .#{$module-prefix}-v { @include grid-layout($alignment-prefix, column); }
+}
+
+/// https://eduardoboucas.com/blog/2015/06/18/viewport-sized-typography-with-minimum-and-maximum-sizes.html
+/// Viewport sized typography with minimum and maximum values
+///
+/// @author Eduardo Boucas (@eduardoboucas)
+///
+/// @param {Number}   $responsive  - Viewport-based size
+/// @param {Number}   $min         - Minimum font size (px)
+/// @param {Number}   $max         - Maximum font size (px)
+///                                  (optional)
+/// @param {Number}   $fallback    - Fallback for viewport-
+///                                  based units (optional)
+///
+/// @example scss - 5vw font size (with 50px fallback),
+///                 minumum of 35px and maximum of 150px
+///  @include responsive-font(5vw, 35px, 150px, 50px);
+///
+@mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
+  $responsive-unitless: $responsive / ($responsive - $responsive + 1);
+  $dimension: if(unit($responsive) == 'vh', 'height', 'width');
+  $min-breakpoint: $min / $responsive-unitless * 100;
+
+  @media (max-#{$dimension}: #{$min-breakpoint}) {
+    font-size: $min;
+  }
+
+  @if $max {
+    $max-breakpoint: $max / $responsive-unitless * 100;
+
+    @media (min-#{$dimension}: #{$max-breakpoint}) {
+      font-size: $max;
+    }
+  }
+
+  @if $fallback {
+    font-size: $fallback;
+  }
+
+  font-size: $responsive;
+}
+
+.u-large   { @include responsive-font(4.5vw, 45px, 180px); line-height: 1.2em; }
+.u-medium  { @include responsive-font(3vw, 30px, 120px); line-height: 1.2em; }
+.u-small   { @include responsive-font(2vw, 20px,  80px); line-height: 1.2em; }
+.u-tiny    { @include responsive-font(0.5vw, 10px,  20px); line-height: 1.2em; }
+
+.u-left    { text-align: left;   }
+.u-center  { text-align: center; }
+.u-right   { text-align: right;  }
+
+.u-block   { display: block; }
+
+// Styles =====================================================================
+
+html {
+  @include responsive-font(1.2vw, 12px, 16px);;
+}
+
+.highlighttable {
+  @include responsive-font(1.4vw, 14px, 16px);;
+}
+
+nav span {
+  padding-right: 1.5%;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+    color: $accent-color;
+}
+
+a:hover, a:active, a:focus {
+    text-decoration: underline;
+    text-decoration-color: $accent-color;
+    outline: none;
+    color: $accent-color;
+}
+
+@include grid(g, g);
+
+
+// Pygments ===================================================================
+// pygmentize -S paraiso-dark -f html -a .highlight > pygment.css
+.linenos {
+  color: #776e71;
+  padding-right: 10px;
+}
+.highlighttable {
+  background-color: #2f1e2e;
+  padding: 5px 10px;
+}
+.highlight {
+  background: #2f1e2e;
+  color: #e7e9db;
+  .hll { background-color: #4f424c; }
+
+  // Generic.Emph
+  .ge { font-style: italic }
+
+  // Generic.Strong, Generic.Subheading, Generic.Heading, Generic.Prompt
+  .gs, .gu, .gh, .gp { font-weight: bold }
+
+  // Name.Attribute, Name.Function, Name.Other, Name.Function.Magic
+  .na, .nf, .nx, .fm { color: #06b6ef }
+
+  // Keyword.Type, Name.Class, Name.Namespace
+  .kt, .nc, .nn { color: #fec418 }
+
+  // Operator, Keyword.Namespace, Name.Decorator, Name.Tag, Operator.Word, Generic.Subheading
+  .o, .kn, .nd, .nt, .ow, .gu{ color: #5bc4bf }
+
+  // Name, Punctuation, Generic.Heading, Name.Builtin, Name.Entity,
+  // Name.Label, Name.Property, Text.Whitespace, Literal.String.Char
+  .n, .p, .gh, .nb, .ni, .nl, .py, .w, .sc { color: #e7e9db }
+
+  // Keyword, Keyword.Constant, Keyword.Declaration, Keyword.Pseudo, Keyword.Reserved
+  .k, .kc, .kd, .kp, .kr { color: #815ba4 }
+
+  // Error, Generic.Deleted, Name.Constant, Name.Exception, Name.Variable,
+  // Name.Variable.Class, Name.Variable.Global, Name.Variable.Instance, Name.Variable.Magic
+  .err, .gd, .no, .ne, .nv, .vc, .vg, .vi, .vm { color: #ef6155 }
+
+  // Comment, Comment.Hashbang, Comment.Multiline, Comment.Preproc, Comment.PreprocFile,
+  // Comment.Single, Comment.Special, Generic.Prompt, Literal.String.Doc
+  .c, .ch, .cm, .cp, .cpf, .c1, .cs, .gp, .sd { color: #776e71 }
+
+  // Generic.Inserted, Literal.Date, Literal.String, Literal.String.Affix, Literal.String.Backtick,
+  // Literal.String.Delimiter, Literal.String.Double, Literal.String.Heredoc, Literal.String.Other,
+  // Literal.String.Regex, Literal.String.Single, Literal.String.Symbol
+  .gi, .ld, .s, .sa, .sb, .dl, .s2, .sh, .sx, .sr, .s1, .ss { color: #48b685 }
+
+  // Literal, Literal.Number, Literal.Number.Bin, Literal.Number.Float, Literal.Number.Hex,
+  // Literal.Number.Integer, Literal.Number.Oct, Literal.String.Escape, Literal.String.Interpol, Name.Builtin.Pseudo,
+  // Literal.Number.Integer.Long
+  .l, .m, .mb, .mf, .mh, .mi, .mo, .se, .si, .bp, .il { color: #f99b15 }
+}

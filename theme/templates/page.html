@@ -1,0 +1,8 @@
+{% extends "_base.html" %}
+{% block content %}
+<div class="g g-v">
+    <span class="u-large g g-right">{{ page.title }}</span>
+    <span class="u-small g g-right">{{ page.locale_date }}</span>
+</div>
+{{ page.content }}
+{% endblock %}
