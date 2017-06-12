@@ -43,8 +43,6 @@ def post_process(pelican):
     grits.build(src_dir=src_dir, out_dir=out_dir, context=context)
 
     # Nuke the intermediate output
-    # shutil.rmtree(src_dir, ignore_errors=True)
-    # shutil.move(out_dir, src_dir)
     clean_directory(src_dir)
     copy_contents(out_dir, src_dir)
 
