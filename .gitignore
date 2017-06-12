@@ -1,3 +1,6 @@
 _site
 *.sublime-workspace
 *.lock
+.sass-cache/
+_output*
+*.pid
