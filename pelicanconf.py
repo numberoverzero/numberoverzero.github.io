@@ -53,6 +53,6 @@ PLUGINS = ["grits_plugin"]
 
 
 # Disable categories, authors, archives
-DIRECT_TEMPLATES = ["index"]
+DIRECT_TEMPLATES = ["index", "archives"]
 AUTHOR_SAVE_AS = ""
 CATEGORY_SAVE_AS = ""
