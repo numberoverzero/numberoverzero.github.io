@@ -67,23 +67,23 @@ css:
 	postcss --use autoprefixer -o $(OUTPUTDIR)/static/style.css $(OUTPUTDIR)/static/style.css
 	cleancss -o $(OUTPUTDIR)/static/style.min.css $(OUTPUTDIR)/static/style.css
 
-html:
+html: css
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
 
 clean:
 	[ ! -d $(OUTPUTDIR) ] || rm -rf $(OUTPUTDIR)
 
-regenerate:
+regenerate: css
 	$(PELICAN) -r $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
 
-serve:
+serve: css
 ifdef PORT
 	cd $(OUTPUTDIR) && $(PY) -m pelican.server $(PORT)
 else
 	cd $(OUTPUTDIR) && $(PY) -m pelican.server
 endif
 
-serve-global:
+serve-global: css
 ifdef SERVER
 	cd $(OUTPUTDIR) && $(PY) -m pelican.server 80 $(SERVER)
 else
@@ -91,18 +91,18 @@ else
 endif
 
 
-devserver:
+devserver: css
 ifdef PORT
 	$(BASEDIR)/develop_server.sh restart $(PORT)
 else
 	$(BASEDIR)/develop_server.sh restart
 endif
 
-stopserver:
+stopserver: css
 	$(BASEDIR)/develop_server.sh stop
 	@echo 'Stopped Pelican and SimpleHTTPServer processes running in background.'
 
-publish:
+publish: css
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
 
 ssh_upload: publish
