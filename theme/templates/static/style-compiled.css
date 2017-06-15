@@ -1,0 +1,154 @@
+.u-large {
+  font-size: 4.5vw;
+  line-height: 1.2em; }
+  @media (max-width: 1000px) {
+    .u-large {
+      font-size: 45px; } }
+  @media (min-width: 4000px) {
+    .u-large {
+      font-size: 180px; } }
+
+.u-medium {
+  font-size: 3vw;
+  line-height: 1.2em; }
+  @media (max-width: 1000px) {
+    .u-medium {
+      font-size: 30px; } }
+  @media (min-width: 4000px) {
+    .u-medium {
+      font-size: 120px; } }
+
+.u-small {
+  font-size: 2vw;
+  line-height: 1.2em; }
+  @media (max-width: 1000px) {
+    .u-small {
+      font-size: 20px; } }
+  @media (min-width: 4000px) {
+    .u-small {
+      font-size: 80px; } }
+
+.u-tiny {
+  font-size: 0.5vw;
+  line-height: 1.2em; }
+  @media (max-width: 2000px) {
+    .u-tiny {
+      font-size: 10px; } }
+  @media (min-width: 4000px) {
+    .u-tiny {
+      font-size: 20px; } }
+
+.u-left {
+  text-align: left; }
+
+.u-center {
+  text-align: center; }
+
+.u-right {
+  text-align: right; }
+
+.u-block {
+  display: block; }
+
+html {
+  font-size: 1.2vw; }
+  @media (max-width: 1000px) {
+    html {
+      font-size: 12px; } }
+  @media (min-width: 1333.33333px) {
+    html {
+      font-size: 16px; } }
+
+.highlighttable {
+  font-size: 1.4vw; }
+  @media (max-width: 1000px) {
+    .highlighttable {
+      font-size: 14px; } }
+  @media (min-width: 1142.85714px) {
+    .highlighttable {
+      font-size: 16px; } }
+
+nav span {
+  padding-right: 1.5%; }
+
+a {
+  text-decoration: none;
+  outline: none;
+  color: #06b6ef; }
+
+a:hover, a:active, a:focus {
+  text-decoration: underline;
+  text-decoration-color: #06b6ef;
+  outline: none;
+  color: #06b6ef; }
+
+.g {
+  display: flex;
+  flex: 1;
+  flex-direction: inherit; }
+
+.g-h {
+  flex-direction: row; }
+  .g-h > .g-left {
+    justify-content: flex-start; }
+  .g-h > .g-center-h {
+    justify-content: center; }
+  .g-h > .g-right {
+    justify-content: flex-end; }
+  .g-h > .g-top {
+    align-items: flex-start; }
+  .g-h > .g-center-v {
+    align-items: center; }
+  .g-h > .g-bottom {
+    align-items: flex-end; }
+
+.g-v {
+  flex-direction: column; }
+  .g-v > .g-left {
+    align-items: flex-start; }
+  .g-v > .g-center-h {
+    align-items: center; }
+  .g-v > .g-right {
+    align-items: flex-end; }
+  .g-v > .g-top {
+    justify-content: flex-start; }
+  .g-v > .g-center-v {
+    justify-content: center; }
+  .g-v > .g-bottom {
+    justify-content: flex-end; }
+
+.linenos {
+  color: #776e71;
+  padding-right: 10px; }
+
+.highlighttable {
+  background-color: #2f1e2e;
+  padding: 5px 10px; }
+
+.highlight {
+  background: #2f1e2e;
+  color: #e7e9db; }
+  .highlight .hll {
+    background-color: #4f424c; }
+  .highlight .ge {
+    font-style: italic; }
+  .highlight .gs, .highlight .gu, .highlight .gh, .highlight .gp {
+    font-weight: bold; }
+  .highlight .na, .highlight .nf, .highlight .nx, .highlight .fm {
+    color: #06b6ef; }
+  .highlight .kt, .highlight .nc, .highlight .nn {
+    color: #fec418; }
+  .highlight .o, .highlight .kn, .highlight .nd, .highlight .nt, .highlight .ow, .highlight .gu {
+    color: #5bc4bf; }
+  .highlight .n, .highlight .p, .highlight .gh, .highlight .nb, .highlight .ni, .highlight .nl, .highlight .py, .highlight .w, .highlight .sc {
+    color: #e7e9db; }
+  .highlight .k, .highlight .kc, .highlight .kd, .highlight .kp, .highlight .kr {
+    color: #815ba4; }
+  .highlight .err, .highlight .gd, .highlight .no, .highlight .ne, .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
+    color: #ef6155; }
+  .highlight .c, .highlight .ch, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .c1, .highlight .cs, .highlight .gp, .highlight .sd {
+    color: #776e71; }
+  .highlight .gi, .highlight .ld, .highlight .s, .highlight .sa, .highlight .sb, .highlight .dl, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .sr, .highlight .s1, .highlight .ss {
+    color: #48b685; }
+  .highlight .l, .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .se, .highlight .si, .highlight .bp, .highlight .il {
+    color: #f99b15; }

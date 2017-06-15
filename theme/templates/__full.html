@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ head }}
+    <link href="/static/style.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="g g-v">
+    <div class="g g-h g-top">
+        <span class="g g-left u-small">numberoverzero</span>
+        <nav class="g g-right">
+            <span class="u-small">
+                <a href="{{ SITEURL }}/posts">/blog</a>
+            </span>
+            <span class="u-small">
+                <a href="https://github.com/numberoverzero">/gh</a>
+            </span>
+            <span class="u-small">
+                <a href="https://www.linkedin.com/in/numberoverzero">/in</a>
+            </span>
+        </nav>
+    </div>
+</div>
+<main id="mapp-container">{{ main }}</main>
+<script type="application/javascript">
+    const rq=(c,b,a)=>{a=new XMLHttpRequest;a.open(b.m||"GET",c);a.responseType=b.r||"";a.timeout=b.t||0;Object.keys(b.h||0).forEach(c=>a.setRequestHeader(c,b.h[c]));return new Promise((c,d)=>{a.onreadystatechange=b=>{4==a.readyState&&[d,c][(!!a.response&&1==(a.status/200|0))|0](a)};a.ontimeout=b=>d(a);a.send(b.b||[]._)})};
+</script>
+<script src="/static/js/mapp.min.js" type="application/javascript"></script>
+{{ scripts }}
+</body>
+</html>

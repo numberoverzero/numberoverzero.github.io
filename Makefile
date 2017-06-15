@@ -62,10 +62,9 @@ help:
 	@echo '                                                                          '
 
 css:
-	mkdir -p $(OUTPUTDIR)/static
-	sass --sourcemap=none theme/templates/style.scss $(OUTPUTDIR)/static/style.css
-	postcss --use autoprefixer -o $(OUTPUTDIR)/static/style.css $(OUTPUTDIR)/static/style.css
-	cleancss -o $(OUTPUTDIR)/static/style.min.css $(OUTPUTDIR)/static/style.css
+	sass --sourcemap=none theme/templates/static/style.scss theme/templates/static/style-compiled.css
+	postcss --use autoprefixer -o theme/templates/static/style-prefixed.css theme/templates/static/style-compiled.css
+	cleancss -o theme/templates/static/style.min.css theme/templates/static/style-prefixed.css
 
 html: css
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
