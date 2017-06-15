@@ -6,6 +6,9 @@
 {% if title %}
 <script type="application/javascript">
     "use strict";
-    mapp.onShowPage(() => {document.title = "{{ title }}";});
+    mapp.onShowPage(() => {
+        document.title = "{{ title }}";
+        renderMathInElement(document.body);
+    });
 </script>
 {% endif %}
