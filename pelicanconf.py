@@ -12,9 +12,10 @@ ARTICLE_SAVE_AS = "posts/{date:%Y}/{date:%m}/{date:%d}/{slug}.html"
 YEAR_ARCHIVE_SAVE_AS = "posts/{date:%Y}/index.html"
 
 DELETE_OUTPUT_DIRECTORY = True
-OUTPUT_RETENTION = ["static", "static/style.css"]
-STATIC_PATHS = ["extra"]
+OUTPUT_RETENTION = ["static"]
+STATIC_PATHS = ["extra", "theme/templates/static"]
 EXTRA_PATH_METADATA = {
+    "theme/templates/static/style.min.css": {"path": "static/style.css"},
     "extra/CNAME": {"path": "CNAME"},
     "extra/_prefetchManifest.json": {"path": "_prefetchManifest.json"},
     "extra/favicon.ico": {"path": "favicon.ico"},
