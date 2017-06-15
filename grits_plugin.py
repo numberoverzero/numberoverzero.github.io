@@ -28,9 +28,6 @@ def copy_contents(src, dst):
 
 
 def post_process(pelican):
-    context = grits.default_context()
-
-    context.include("default")["css_files"].append("static/style.min.css")
     src_dir = pelican.settings["OUTPUT_PATH"]
     if DEBUG:
         tmp_dir = Path(src_dir).parent / "_output_grits"
@@ -40,7 +37,12 @@ def post_process(pelican):
         tmp_dir = tempfile.TemporaryDirectory(prefix="grits-tmp")
         out_dir = tmp_dir.name
 
-    grits.build(src_dir=src_dir, out_dir=out_dir, context=context)
+    renderer = grits.build(
+        src_dir=src_dir,
+        out_dir=out_dir,
+        template_dir="theme/templates"
+    )
+    renderer.render_template("static/style.min.css")
 
     # Nuke the intermediate output
     clean_directory(src_dir)

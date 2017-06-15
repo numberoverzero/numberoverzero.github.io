@@ -1,2 +1,2 @@
-grits>=0.4
+grits>=0.5
 pelican>=3.7
