@@ -3,12 +3,13 @@
 </head>
 
 <main>{% block content %}{% endblock %}</main>
-{% if title %}
 <script type="application/javascript">
     "use strict";
     mapp.onShowPage(() => {
+        {% if title %}
         document.title = "{{ title }}";
+        {% endif %}
         renderMathInElement(document.body);
     });
 </script>
-{% endif %}
+
