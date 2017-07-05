@@ -29,8 +29,8 @@
     const rq=(c,b,a)=>{a=new XMLHttpRequest;a.open(b.m||"GET",c);a.responseType=b.r||"";a.timeout=b.t||0;Object.keys(b.h||0).forEach(c=>a.setRequestHeader(c,b.h[c]));return new Promise((c,d)=>{a.onreadystatechange=b=>{4==a.readyState&&[d,c][(!!a.response&&1==(a.status/200|0))|0](a)};a.ontimeout=b=>d(a);a.send(b.b||[]._)})};
 </script>
 <script src="/static/js/mapp.min.js" type="application/javascript"></script>
-{{ scripts }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha256-gNVpJCw01Tg4rruvtWJp9vS0rRchXP2YF+U+b2lp8Po=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+{{ scripts }}
 </body>
 </html>
