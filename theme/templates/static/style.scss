@@ -41,6 +41,7 @@ $accent-color: #06b6ef;
   & > .#{$prefix}-bottom   { #{$vertical-align}: flex-end;     }
 }
 
+
 @mixin grid($module-prefix, $alignment-prefix) {
   .#{$module-prefix} {
     display: flex;
@@ -105,27 +106,23 @@ $accent-color: #06b6ef;
 // Styles =====================================================================
 
 html {
-  @include responsive-font(1.2vw, 12px, 16px);;
+  @include responsive-font(1.3vw, 13px, 17px);;
 }
 
 .highlighttable {
-  @include responsive-font(1.4vw, 14px, 16px);;
+  @include responsive-font(1.5vw, 15px, 17px);;
 }
 
 nav span {
   padding-right: 1.5%;
+
+  a {
+    text-decoration: none;
+    outline: none;
+  }
 }
 
 a {
-    text-decoration: none;
-    outline: none;
-    color: $accent-color;
-}
-
-a:hover, a:active, a:focus {
-    text-decoration: underline;
-    text-decoration-color: $accent-color;
-    outline: none;
     color: $accent-color;
 }
 
@@ -134,6 +131,12 @@ a:hover, a:active, a:focus {
 
 // Pygments ===================================================================
 // pygmentize -S paraiso-dark -f html -a .highlight > pygment.css
+tt {
+  color: #e7e9db;
+  background-color: #2f1e2e;
+  font-size: 0.9em;
+}
+
 .linenos {
   color: #776e71;
   padding-right: 10px;
