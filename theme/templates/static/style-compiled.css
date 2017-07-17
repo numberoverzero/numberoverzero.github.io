@@ -1,12 +1,12 @@
 @media (max-width: 1023px) {
   .container {
-    max-width: 90vw; } }
+    max-width: 85vw; } }
 @media (min-width: 1024px) {
   .container {
     max-width: 80vw; } }
 @media (min-width: 1280px) {
   .container {
-    max-width: 70vw; } }
+    max-width: 60vw; } }
 
 .u-large {
   font-size: 4.5vw;
@@ -77,13 +77,13 @@ html {
       font-size: 20px; } }
 
 .highlighttable {
-  font-size: 2.1vw; }
-  @media (max-width: 761.90476px) {
+  font-size: 2vw; }
+  @media (max-width: 800px) {
     .highlighttable {
       font-size: 16px; } }
   @media (min-width: 1000px) {
     .highlighttable {
-      font-size: 21px; } }
+      font-size: 20px; } }
 
 nav span {
   padding-right: 1.5%; }
@@ -133,7 +133,7 @@ a {
 
 code {
   color: #e7e9db;
-  background-color: #2f1e2e;
+  background: #776e71;
   font-size: 0.95em;
   padding: 0.15em; }
 
@@ -142,18 +142,15 @@ code {
   padding-right: 10px; }
 
 .highlighttable {
-  background-color: #2f1e2e;
+  background: #2f1e2e;
   padding: 5px 10px;
-  min-width: 100%; }
-
-li > .highlighttable {
-  min-width: 0; }
+  min-width: 50vw; }
 
 .highlight {
   background: #2f1e2e;
   color: #e7e9db; }
   .highlight .hll {
-    background-color: #4f424c; }
+    background: #4f424c; }
   .highlight .ge {
     font-style: italic; }
   .highlight .gs, .highlight .gu, .highlight .gh, .highlight .gp {
