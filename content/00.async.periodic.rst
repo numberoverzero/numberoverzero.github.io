@@ -1,0 +1,220 @@
+Periodic Execution With Asyncio
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:date: 2017-07-17
+:slug: periodic-execution-with-asyncio
+
+A friend using `bottom`__ wants to run a periodic task to fetch rss feeds.  Asyncio is
+`rather complex`__ , so this post only explores one solution where periodic tasks are run on the same event loop.
+There exists an argument for using multiple event loops as a means to control execution priority, but that's
+outside the scope of periodically fetching rss feeds for a chat bot.
+
+**tl;dr** if you prefer to jump right into the code, `here's a gist`__ of the final product.
+
+__ http://bottom-docs.readthedocs.io/en/latest/
+__ http://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/
+__ https://gist.github.com/numberoverzero/71b2c0410cbdeca3229334c9bc05dc46
+
+Keep It Simple
+==============
+
+I try to maintain a few simple rules when writing asynchronous python.  Otherwise, it's easy to get lost.
+
+1. You only need one event loop.  Use :code:`loop = asyncio.new_event_loop()` wherever you set things up.
+2. Use :code:`loop.create_task` to schedule tasks you don't need to wait for.
+3. Use :code:`await` to call and wait for another async function.
+4. For development, enable debugging so exceptions don't go to the void:
+
+   .. code-block:: python3
+
+       import asyncio
+       import logging
+
+       loop = asyncio.new_event_loop()
+       loop.set_debug(True)
+       logging.basicConfig(level=logging.DEBUG)
+
+
+The RSS Updater
+===============
+
+This is the client that will periodically grab the contents of each rss feed.  This component doesn't have any
+idea about scheduling and for ease of debugging just stores the response length and a nonce (so we can see it change).
+This uses an `aiohttp.ClientSession`__ to make asynchronous GETs.  The class is callable, since there's only one
+method we really care about.
+
+__ http://aiohttp.readthedocs.io/en/stable/client.html
+
+.. code-block:: python3
+
+    import asyncio
+    import json
+    import secrets
+
+    import aiohttp
+
+    from concurrent.futures import ALL_COMPLETED
+
+
+    class FeedUpdater:
+        def __init__(self, feeds, loop):
+            self.feeds = feeds
+            self.loop = loop
+            self.session = aiohttp.ClientSession(loop=loop)
+
+        async def _fetch(self, url):
+            async with self.session.get(url) as response:
+                status = response.status
+                assert status == 200
+                data = await response.text()
+                return url, data
+
+        async def __call__(self):
+            tasks = [self._fetch(url) for url in self.feeds.keys()]
+            done, pending = await asyncio.wait(
+                tasks,
+                loop=self.loop,
+                return_when=ALL_COMPLETED
+            )
+            for task in done:
+                url, data = task.result()
+                self.feeds[url] = f"{len(data)}.{secrets.token_hex(4)}"
+
+            # TODO placeholder
+            print(json.dumps(self.feeds, indent=4, sort_keys=True))
+
+        def __del__(self):
+            self.session.close()
+
+
+Let's say we just want to run this once.  Referring to the rules above we'll create a loop, create an instance of the
+FeedUpdater, create a task in the loop, and run until the task is complete.  Since we're still developing things, turn
+all the debugging to high:
+
+.. code-block:: python3
+
+    # run_once.py
+
+    import asyncio
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+    loop = asyncio.new_event_loop()
+    loop.set_debug(True)
+
+    feeds = {
+        "http://feeds.abcnews.com/abcnews/topstories": None,
+        "http://www.feedforall.com/sample.xml": None,
+    }
+    update = FeedUpdater(feeds=feeds, loop=loop)
+
+    task = loop.create_task(update())
+    loop.run_until_complete(task)
+
+This will produce a bunch of debug output as aiohttp steps through the request process.  Omitting those lines,
+we'll eventually see the length of each html response plus a random nonce:
+
+.. code-block:: console
+
+    $ python run_once.py
+    DEBUG:asyncio:Using selector: EpollSelector
+    ...
+    ...
+    DEBUG:asyncio:poll 15446.009 ms took 74.108 ms: 1 events
+    {
+        "http://feeds.abcnews.com/abcnews/topstories": "40697.7be0ad86",
+        "http://www.feedforall.com/sample.xml": "8631.27544741"
+    }
+    DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+    $
+
+We can expand this to call :code:`update` every 3 seconds by wrapping it with another async function.  Modifying
+run_once.py above,  I've dropped the logging for readability:
+
+.. code-block:: python3
+
+    import asyncio
+    loop = asyncio.new_event_loop()
+    feeds = {
+        "http://feeds.abcnews.com/abcnews/topstories": None,
+        "http://www.feedforall.com/sample.xml": None,
+    }
+    update = FeedUpdater(feeds=feeds, loop=loop)
+
+    async def constant_update():
+        while True:
+            await update()
+            await asyncio.sleep(3, loop=loop)
+
+    task = loop.create_task(constant_update())
+    loop.run_forever()
+
+Which outputs:
+
+.. code-block:: console
+
+    $ python run_once.py
+    {
+        "http://feeds.abcnews.com/abcnews/topstories": "40687.1e4ad4cc",
+        "http://www.feedforall.com/sample.xml": "8631.4e022017"
+    }
+    {
+        "http://feeds.abcnews.com/abcnews/topstories": "40687.ef91b35d",
+        "http://www.feedforall.com/sample.xml": "8631.9cde3a7b"
+    }
+    {
+        "http://feeds.abcnews.com/abcnews/topstories": "40687.a9e2a105",
+        "http://www.feedforall.com/sample.xml": "8631.f57b2583"
+    }
+
+A General Scheduler
+===================
+
+The last step is to generalize the :code:`constant_update` function so that we don't write one
+for each task we want to run periodically.
+
+.. code-block:: python3
+
+    import functools
+    def schedule(func, args=None, kwargs=None, interval=60, *, loop):
+        if args is None:
+            args = []
+        if kwargs is None:
+            kwargs = {}
+
+        async def periodic_func():
+            while True:
+                await func(*args, **kwargs)
+                await asyncio.sleep(interval, loop=loop)
+
+        return loop.create_task(periodic_func())
+    create_scheduler = lambda loop: functools.partial(loop=loop)
+
+In the following sample I've added a function to handle SIGINT gracefully, which demonstrates how to shut
+down the periodic task and event loop on CTRL + C.
+
+.. code-block:: python3
+
+    def main():
+        import signal
+        loop = asyncio.new_event_loop()
+        schedule = create_scheduler(loop=loop)
+
+        feeds = {
+            "http://feeds.abcnews.com/abcnews/topstories": None,
+            "http://www.feedforall.com/sample.xml": None
+        }
+        update = FeedUpdater(feeds=feeds, loop=loop)
+        refresh_task = schedule(update, interval=3)
+
+        def stop_refresh(signal, frame):
+            print("\nexiting...")
+            refresh_task.cancel()
+            loop.stop()
+        signal.signal(signal.SIGINT, stop_refresh)
+
+        loop.run_forever()
+
+
+    if __name__ == "__main__":
+        main()
