@@ -105,10 +105,10 @@ $accent-color: #06b6ef;
   font-size: $responsive;
 }
 
-.u-large   { @include responsive-font(4.5vw, 45px, 180px); line-height: 1.2em; }
-.u-medium  { @include responsive-font(3vw, 30px, 120px); line-height: 1.2em; }
-.u-small   { @include responsive-font(2vw, 20px,  80px); line-height: 1.2em; }
-.u-tiny    { @include responsive-font(0.5vw, 10px,  20px); line-height: 1.2em; }
+.u-large       { @include responsive-font(4.5vw, 45px, 180px); line-height: 1.2em; }
+.u-medium, h2  { @include responsive-font(3vw, 30px, 120px); line-height: 1.2em; }
+.u-small       { @include responsive-font(2vw, 20px,  80px); line-height: 1.2em; }
+.u-tiny        { @include responsive-font(0.5vw, 10px,  20px); line-height: 1.2em; }
 
 .u-left    { text-align: left;   }
 .u-center  { text-align: center; }
@@ -119,12 +119,12 @@ $accent-color: #06b6ef;
 // Styles =====================================================================
 
 html {
-  @include responsive-font(2.2vw, 16px, 22px);
+  @include responsive-font(2vw, 16px, 20px);
   line-height: 135%;
 }
 
 .highlighttable {
-  @include responsive-font(2.4vw, 16px, 24px);
+  @include responsive-font(2.1vw, 16px, 21px);
 }
 
 nav span {
@@ -163,7 +163,11 @@ tt {
 .highlighttable {
   background-color: #2f1e2e;
   padding: 5px 10px;
-  min-width: 65%;
+  min-width: 100%;
+}
+
+li>.highlighttable {
+  min-width: 0;
 }
 .highlight {
   background: #2f1e2e;

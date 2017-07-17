@@ -18,14 +18,14 @@
     .u-large {
       font-size: 180px; } }
 
-.u-medium {
+.u-medium, h2 {
   font-size: 3vw;
   line-height: 1.2em; }
   @media (max-width: 1000px) {
-    .u-medium {
+    .u-medium, h2 {
       font-size: 30px; } }
   @media (min-width: 4000px) {
-    .u-medium {
+    .u-medium, h2 {
       font-size: 120px; } }
 
 .u-small {
@@ -61,23 +61,23 @@
   display: block; }
 
 html {
-  font-size: 2.2vw;
+  font-size: 2vw;
   line-height: 135%; }
-  @media (max-width: 727.27273px) {
+  @media (max-width: 800px) {
     html {
       font-size: 16px; } }
   @media (min-width: 1000px) {
     html {
-      font-size: 22px; } }
+      font-size: 20px; } }
 
 .highlighttable {
-  font-size: 2.4vw; }
-  @media (max-width: 666.66667px) {
+  font-size: 2.1vw; }
+  @media (max-width: 761.90476px) {
     .highlighttable {
       font-size: 16px; } }
   @media (min-width: 1000px) {
     .highlighttable {
-      font-size: 24px; } }
+      font-size: 21px; } }
 
 nav span {
   padding-right: 1.5%; }
@@ -175,7 +175,10 @@ tt {
 .highlighttable {
   background-color: #2f1e2e;
   padding: 5px 10px;
-  min-width: 65%; }
+  min-width: 100%; }
+
+li > .highlighttable {
+  min-width: 0; }
 
 .highlight {
   background: #2f1e2e;
