@@ -14,19 +14,19 @@
   @media (max-width: 1000px) {
     .u-large {
       font-size: 45px; } }
-  @media (min-width: 4000px) {
+  @media (min-width: 1777.77778px) {
     .u-large {
-      font-size: 180px; } }
+      font-size: 80px; } }
 
 .u-medium, h2 {
   font-size: 3vw;
   line-height: 1.2em; }
-  @media (max-width: 1000px) {
+  @media (max-width: 1166.66667px) {
     .u-medium, h2 {
-      font-size: 30px; } }
-  @media (min-width: 4000px) {
+      font-size: 35px; } }
+  @media (min-width: 1666.66667px) {
     .u-medium, h2 {
-      font-size: 120px; } }
+      font-size: 50px; } }
 
 .u-small {
   font-size: 2vw;
@@ -34,9 +34,9 @@
   @media (max-width: 1000px) {
     .u-small {
       font-size: 20px; } }
-  @media (min-width: 4000px) {
+  @media (min-width: 1750px) {
     .u-small {
-      font-size: 80px; } }
+      font-size: 35px; } }
 
 .u-tiny {
   font-size: 0.5vw;
@@ -60,9 +60,15 @@
 .u-block {
   display: block; }
 
+h1, h2, h3, h4 {
+  font-weight: 500;
+  color: #06b6ef;
+  font-family: Arial, sans-serif; }
+
 html {
   font-size: 2vw;
-  line-height: 135%; }
+  line-height: 135%;
+  font-family: Times New Roman, serif; }
   @media (max-width: 800px) {
     html {
       font-size: 16px; } }
@@ -162,7 +168,7 @@ a {
         -ms-flex-pack: end;
             justify-content: flex-end; }
 
-tt {
+code {
   color: #e7e9db;
   background-color: #2f1e2e;
   font-size: 0.95em;

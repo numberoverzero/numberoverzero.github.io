@@ -18,6 +18,9 @@
 
 // Config =====================================================================
 
+$accent-font-face: Arial, sans-serif;
+$body-font-face: Times New Roman, serif;
+
 // from paraiso-dark Name.Function
 $accent-color: #06b6ef;
 
@@ -105,9 +108,9 @@ $accent-color: #06b6ef;
   font-size: $responsive;
 }
 
-.u-large       { @include responsive-font(4.5vw, 45px, 180px); line-height: 1.2em; }
-.u-medium, h2  { @include responsive-font(3vw, 30px, 120px); line-height: 1.2em; }
-.u-small       { @include responsive-font(2vw, 20px,  80px); line-height: 1.2em; }
+.u-large       { @include responsive-font(4.5vw, 45px,  80px); line-height: 1.2em; }
+.u-medium, h2  { @include responsive-font(3vw,   35px,  50px); line-height: 1.2em; }
+.u-small       { @include responsive-font(2vw,   20px,  35px); line-height: 1.2em; }
 .u-tiny        { @include responsive-font(0.5vw, 10px,  20px); line-height: 1.2em; }
 
 .u-left    { text-align: left;   }
@@ -116,11 +119,19 @@ $accent-color: #06b6ef;
 
 .u-block   { display: block; }
 
+h1, h2, h3, h4 {
+  font-weight: 500;
+  color: $accent-color;
+  font-family: $accent-font-face;
+}
+
 // Styles =====================================================================
 
 html {
   @include responsive-font(2vw, 16px, 20px);
   line-height: 135%;
+
+  font-family: $body-font-face;
 }
 
 .highlighttable {
@@ -149,7 +160,7 @@ a {
 
 // Pygments ===================================================================
 // pygmentize -S paraiso-dark -f html -a .highlight > pygment.css
-tt {
+code {
   color: #e7e9db;
   background-color: #2f1e2e;
   font-size: 0.95em;
