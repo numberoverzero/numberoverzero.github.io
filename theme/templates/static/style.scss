@@ -52,6 +52,19 @@ $accent-color: #06b6ef;
   .#{$module-prefix}-v { @include grid-layout($alignment-prefix, column); }
 }
 
+
+.container {
+  @media (max-width: 1023px) {
+    max-width: 90vw;
+  }
+  @media (min-width: 1024px) {
+    max-width: 80vw;
+  }
+  @media (min-width: 1280px) {
+    max-width: 70vw;
+  }
+}
+
 /// https://eduardoboucas.com/blog/2015/06/18/viewport-sized-typography-with-minimum-and-maximum-sizes.html
 /// Viewport sized typography with minimum and maximum values
 ///
@@ -106,11 +119,11 @@ $accent-color: #06b6ef;
 // Styles =====================================================================
 
 html {
-  @include responsive-font(1.3vw, 13px, 17px);;
+  @include responsive-font(2.2vw, 16px, 22px);
 }
 
 .highlighttable {
-  @include responsive-font(1.5vw, 15px, 17px);;
+  @include responsive-font(2.4vw, 16px, 24px);
 }
 
 nav span {
@@ -119,6 +132,10 @@ nav span {
   a {
     text-decoration: none;
     outline: none;
+  }
+
+  a:hover, a:active, a:focus {
+    text-decoration: underline;
   }
 }
 
@@ -134,7 +151,8 @@ a {
 tt {
   color: #e7e9db;
   background-color: #2f1e2e;
-  font-size: 0.9em;
+  font-size: 0.95em;
+  padding: 0.15em;
 }
 
 .linenos {
