@@ -15,6 +15,7 @@ DELETE_OUTPUT_DIRECTORY = True
 STATIC_PATHS = ["extra"]
 EXTRA_PATH_METADATA = {
     "extra/CNAME": {"path": "CNAME"},
+    "extra/.nojekyll": {"path": ".nojekyll"},
     "extra/_prefetchManifest.json": {"path": "_prefetchManifest.json"},
     "extra/favicon.ico": {"path": "favicon.ico"},
 }
