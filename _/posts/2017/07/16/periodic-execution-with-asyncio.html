@@ -1,33 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-<title>numberoverzero</title>
-    <link href="/static/style.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha256-tkzDFSl16wERzhCWg0ge2tON2+D6Qe9iEaJqM4ZGd4E=" rel="stylesheet" crossorigin="anonymous" />
-</head>
-<body>
 <div class="g g-v">
-    <div class="g g-h g-top">
-        <span class="g g-left u-small">numberoverzero</span>
-        <nav class="g g-right">
-            <span class="u-small">
-                <a href="/posts">/blog</a>
-            </span>
-            <span class="u-small">
-                <a href="https://github.com/numberoverzero">/gh</a>
-            </span>
-            <span class="u-small">
-                <a href="https://www.linkedin.com/in/numberoverzero">/in</a>
-            </span>
-        </nav>
-    </div>
-</div>
-<main id="mapp-container"><div class="g g-v">
 <span class="u-large g g-right">Periodic Execution With Asyncio</span>
-<span class="u-small g g-right">2017-07-17</span>
+<span class="u-small g g-right">2017-07-16</span>
 <div class="container"><p>A friend using <a class="reference external" href="http://bottom-docs.readthedocs.io/en/latest/">bottom</a> wants to run a periodic task to fetch rss feeds.  Asyncio is
 <a class="reference external" href="http://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/">rather complex</a> , so this post only explores one solution where periodic tasks are run on the same event loop.
 There exists an argument for using multiple event loops as a means to control execution priority, but that's
@@ -345,20 +318,11 @@ down the periodic task and event loop on CTRL + C.</p>
 </td></tr></table></div>
 </div>
 </div>
-</main>
-<script type="application/javascript">
-    const rq=(c,b,a)=>{a=new XMLHttpRequest;a.open(b.m||"GET",c);a.responseType=b.r||"";a.timeout=b.t||0;Object.keys(b.h||0).forEach(c=>a.setRequestHeader(c,b.h[c]));return new Promise((c,d)=>{a.onreadystatechange=b=>{4==a.readyState&&[d,c][(!!a.response&&1==(a.status/200|0))|0](a)};a.ontimeout=b=>d(a);a.send(b.b||[]._)})};
-</script>
-<script src="/static/js/mapp.min.js" type="application/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha256-gNVpJCw01Tg4rruvtWJp9vS0rRchXP2YF+U+b2lp8Po=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+
 <script type="application/javascript">
  "use strict";
     mapp.onShowPage(() => {
-        document.title = "numberoverzero";
+        document.title = "Periodic Execution With Asyncio";
         renderMathInElement(document.body);
     });
 </script>
-
-</body>
-</html>
