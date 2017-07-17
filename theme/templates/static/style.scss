@@ -120,6 +120,7 @@ $accent-color: #06b6ef;
 
 html {
   @include responsive-font(2.2vw, 16px, 22px);
+  line-height: 135%;
 }
 
 .highlighttable {

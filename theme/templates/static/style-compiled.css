@@ -61,7 +61,8 @@
   display: block; }
 
 html {
-  font-size: 2.2vw; }
+  font-size: 2.2vw;
+  line-height: 135%; }
   @media (max-width: 727.27273px) {
     html {
       font-size: 16px; } }
