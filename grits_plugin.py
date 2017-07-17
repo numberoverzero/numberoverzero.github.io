@@ -8,23 +8,8 @@ import shutil
 DEBUG = True
 
 
-def clean_directory(directory):
-    for file_object in os.listdir(directory):
-        file_object_path = os.path.join(directory, file_object)
-        if os.path.isfile(file_object_path):
-            os.unlink(file_object_path)
-        else:
-            shutil.rmtree(file_object_path)
-
-
-def copy_contents(src, dst):
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isdir(s):
-            shutil.copytree(s, d, symlinks=False, ignore=None)
-        else:
-            shutil.copy2(s, d)
+def register():
+    signals.finalized.connect(post_process)
 
 
 def post_process(pelican):
@@ -49,5 +34,20 @@ def post_process(pelican):
     copy_contents(out_dir, src_dir)
 
 
-def register():
-    signals.finalized.connect(post_process)
+def clean_directory(directory):
+    for file_object in os.listdir(directory):
+        file_object_path = os.path.join(directory, file_object)
+        if os.path.isfile(file_object_path):
+            os.unlink(file_object_path)
+        else:
+            shutil.rmtree(file_object_path)
+
+
+def copy_contents(src, dst):
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, symlinks=False, ignore=None)
+        else:
+            shutil.copy2(s, d)
