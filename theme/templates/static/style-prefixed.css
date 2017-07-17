@@ -1,3 +1,13 @@
+@media (max-width: 1023px) {
+  .container {
+    max-width: 90vw; } }
+@media (min-width: 1024px) {
+  .container {
+    max-width: 80vw; } }
+@media (min-width: 1280px) {
+  .container {
+    max-width: 70vw; } }
+
 .u-large {
   font-size: 4.5vw;
   line-height: 1.2em; }
@@ -51,28 +61,30 @@
   display: block; }
 
 html {
-  font-size: 1.3vw; }
-  @media (max-width: 1000px) {
+  font-size: 2.2vw; }
+  @media (max-width: 727.27273px) {
     html {
-      font-size: 13px; } }
-  @media (min-width: 1307.69231px) {
+      font-size: 16px; } }
+  @media (min-width: 1000px) {
     html {
-      font-size: 17px; } }
+      font-size: 22px; } }
 
 .highlighttable {
-  font-size: 1.5vw; }
-  @media (max-width: 1000px) {
+  font-size: 2.4vw; }
+  @media (max-width: 666.66667px) {
     .highlighttable {
-      font-size: 15px; } }
-  @media (min-width: 1133.33333px) {
+      font-size: 16px; } }
+  @media (min-width: 1000px) {
     .highlighttable {
-      font-size: 17px; } }
+      font-size: 24px; } }
 
 nav span {
   padding-right: 1.5%; }
   nav span a {
     text-decoration: none;
     outline: none; }
+  nav span a:hover, nav span a:active, nav span a:focus {
+    text-decoration: underline; }
 
 a {
   color: #06b6ef; }
@@ -152,7 +164,8 @@ a {
 tt {
   color: #e7e9db;
   background-color: #2f1e2e;
-  font-size: 0.9em; }
+  font-size: 0.95em;
+  padding: 0.15em; }
 
 .linenos {
   color: #776e71;
