@@ -1,224 +1,399 @@
-// Solarized colors
-//$base03:     #002b36;
-//$base02:     #073642;
-//$base01:     #586e75;
-//$base00:     #657b83;
-//$base0:      #839496;
-//$base1:      #93a1a1;
-//$base2:      #eee8d5;
-//$base3:      #fdf6e3;
-//$yellow:     #b58900;
-//$orange:     #cb4b16;
-//$red:        #dc322f;
-//$magenta:    #d33682;
-//$violet:     #6c71c4;
-//$blue:       #268bd2;
-//$cyan:       #2aa198;
-//$green:      #859900;
+// ===========================================================================
+// RESET =====================================================================
+// ===========================================================================
 
-// Config =====================================================================
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
-$accent-font-face: Arial, sans-serif;
-$body-font-face: Times New Roman, serif;
-
-// from paraiso-dark Name.Function
-$accent-color: #06b6ef;
-
-// Utilities ==================================================================
-
-// Grid from http://codepen.io/numberoverzero/pen/EPJVNg
-@mixin grid-layout($prefix, $flex-direction) {
-  $j: justify-content;
-  $a: align-items;
-  $horizontal-align: if($flex-direction == row, $j, $a);
-  $vertical-align: if($flex-direction == row, $a, $j);
-
-  flex-direction: $flex-direction;
-
-  & > .#{$prefix}-left     { #{$horizontal-align}: flex-start; }
-  & > .#{$prefix}-center-h { #{$horizontal-align}: center;     }
-  & > .#{$prefix}-right    { #{$horizontal-align}: flex-end;   }
-
-  & > .#{$prefix}-top      { #{$vertical-align}: flex-start;   }
-  & > .#{$prefix}-center-v { #{$vertical-align}: center;       }
-  & > .#{$prefix}-bottom   { #{$vertical-align}: flex-end;     }
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
+// ===========================================================================
+// COLORS ====================================================================
+// ===========================================================================
 
-@mixin grid($module-prefix, $alignment-prefix) {
-  .#{$module-prefix} {
-    display: flex;
-    flex: 1;
-    flex-direction: inherit;
-  }
-  .#{$module-prefix}-h { @include grid-layout($alignment-prefix, row); }
-  .#{$module-prefix}-v { @include grid-layout($alignment-prefix, column); }
-}
-
-
-.container {
-  @media (max-width: 1023px) {
-    max-width: 85vw;
-  }
-  @media (min-width: 1024px) {
-    max-width: 80vw;
-  }
-  @media (min-width: 1280px) {
-    max-width: 60vw;
-  }
-}
-
-/// https://eduardoboucas.com/blog/2015/06/18/viewport-sized-typography-with-minimum-and-maximum-sizes.html
-/// Viewport sized typography with minimum and maximum values
-///
-/// @author Eduardo Boucas (@eduardoboucas)
-///
-/// @param {Number}   $responsive  - Viewport-based size
-/// @param {Number}   $min         - Minimum font size (px)
-/// @param {Number}   $max         - Maximum font size (px)
-///                                  (optional)
-/// @param {Number}   $fallback    - Fallback for viewport-
-///                                  based units (optional)
-///
-/// @example scss - 5vw font size (with 50px fallback),
-///                 minumum of 35px and maximum of 150px
-///  @include responsive-font(5vw, 35px, 150px, 50px);
-///
-@mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
-  $responsive-unitless: $responsive / ($responsive - $responsive + 1);
-  $dimension: if(unit($responsive) == 'vh', 'height', 'width');
-  $min-breakpoint: $min / $responsive-unitless * 100;
-
-  @media (max-#{$dimension}: #{$min-breakpoint}) {
-    font-size: $min;
-  }
-
-  @if $max {
-    $max-breakpoint: $max / $responsive-unitless * 100;
-
-    @media (min-#{$dimension}: #{$max-breakpoint}) {
-      font-size: $max;
-    }
-  }
-
-  @if $fallback {
-    font-size: $fallback;
-  }
-
-  font-size: $responsive;
-}
-
-.u-large       { @include responsive-font(4.5vw, 45px,  80px); line-height: 1.2em; }
-.u-medium, h2  { @include responsive-font(3vw,   35px,  50px); line-height: 1.2em; }
-.u-small       { @include responsive-font(2vw,   20px,  35px); line-height: 1.2em; }
-.u-tiny        { @include responsive-font(0.5vw, 10px,  20px); line-height: 1.2em; }
-
-.u-left    { text-align: left;   }
-.u-center  { text-align: center; }
-.u-right   { text-align: right;  }
-
-.u-block   { display: block; }
-
-h1, h2, h3, h4 {
-  font-weight: 500;
-  color: $accent-color;
-  font-family: $accent-font-face;
-}
-
-// Styles =====================================================================
+// from http://ethanschoonover.com/solarized
+$base03:  #002b36;
+$base02:  #073642;
+$base01:  #586e75;
+$base00:  #657b83;
+$base0:   #839496;
+$base1:   #93a1a1;
+$base2:   #eee8d5;
+$base3:   #fdf6e3;
+$yellow:  #b58900;
+$orange:  #cb4b16;
+$red:     #dc322f;
+$magenta: #d33682;
+$violet:  #6c71c4;
+$blue:    #268bd2;
+$cyan:    #2aa198;
+$green:   #859900;
 
 html {
-  @include responsive-font(2vw, 16px, 20px);
-  line-height: 135%;
-
-  font-family: $body-font-face;
+  background: $base3;
+  color: $base00;
 }
 
-.highlighttable {
-  @include responsive-font(2vw, 16px, 20px);
-}
-
-nav span {
-  padding-right: 1.5%;
-
-  a {
-    text-decoration: none;
-    outline: none;
-  }
-
-  a:hover, a:active, a:focus {
-    text-decoration: underline;
-  }
+h1, h2, h3, h4 {
+  color: $yellow;
 }
 
 a {
-    color: $accent-color;
+  color: $yellow;
+  &:hover, &:active, &:visited { color: $yellow }
 }
 
-@include grid(g, g);
+.quiet {
+  color: $base01;
+}
+
+code, pre {
+  background: $base2;
+  color: $base00;
+}
+
+// pip install pygments-style-solarized
+// pygmentize -S solarizedlight -f html > solarizedlight.css
+.highlight {
+  // TODO background, color
+  // previous:
+  //     background: #2f1e2e;
+  //     color: #e7e9db;
+
+  //background: $base2;
+  //color: $base00;
+
+  .hll { background-color: #ffffcc }
+  // Comment
+  .c { color: $base1; font-style: italic }
+  // Error
+  .err { color: $red }
+  // Generic
+  .g { color: $base00 }
+  // Keyword
+  .k { color: $green }
+  // Literal
+  .l { color: $base00 }
+  // Name
+  .n { color: $base01 }
+  // Operator
+  .o { color: $base00 }
+  // Other
+  .x { color: $base00 }
+  // Punctuation
+  .p { color: $base00 }
+  // Comment.Hashbang
+  .ch { color: $base1; font-style: italic }
+  // Comment.Multiline
+  .cm { color: $base1; font-style: italic }
+  // Comment.Preproc
+  .cp { color: $base1; font-style: italic }
+  // Comment.PreprocFile
+  .cpf { color: $base1; font-style: italic }
+  // Comment.Single
+  .c1 { color: $base1; font-style: italic }
+  // Comment.Special
+  .cs { color: $base1; font-style: italic }
+  // Generic.Deleted
+  .gd { color: $base00 }
+  // Generic.Emph
+  .ge { color: $base00 }
+  // Generic.Error
+  .gr { color: $base00 }
+  // Generic.Heading
+  .gh { color: $base00 }
+  // Generic.Inserted
+  .gi { color: $base00 }
+  // Generic.Output
+  .go { color: $base00 }
+  // Generic.Prompt
+  .gp { color: $base00 }
+  // Generic.Strong
+  .gs { color: $base00 }
+  // Generic.Subheading
+  .gu { color: $base00 }
+  // Generic.Traceback
+  .gt { color: $base00 }
+  // Keyword.Constant
+  .kc { color: $green }
+  // Keyword.Declaration
+  .kd { color: $green }
+  // Keyword.Namespace
+  .kn { color: $orange }
+  // Keyword.Pseudo
+  .kp { color: $orange }
+  // Keyword.Reserved
+  .kr { color: $green }
+  // Keyword.Type
+  .kt { color: $green }
+  // Literal.Date
+  .ld { color: $base00 }
+  // Literal.Number
+  .m { color: $cyan }
+  // Literal.String
+  .s { color: $cyan }
+  // Name.Attribute
+  .na { color: $base00 }
+  // Name.Builtin
+  .nb { color: $blue }
+  // Name.Class
+  .nc { color: $blue }
+  // Name.Constant
+  .no { color: $yellow }
+  // Name.Decorator
+  .nd { color: $orange }
+  // Name.Entity
+  .ni { color: $orange }
+  // Name.Exception
+  .ne { color: $orange }
+  // Name.Function
+  .nf { color: $blue }
+  // Name.Label
+  .nl { color: $base00 }
+  // Name.Namespace
+  .nn { color: $yellow }
+  // Name.Other
+  .nx { color: $base00 }
+  // Name.Property
+  .py { color: $blue }
+  // Name.Tag
+  .nt { color: $green }
+  // Name.Variable
+  .nv { color: $orange }
+  // Operator.Word
+  .ow { color: $green }
+  // Text.Whitespace
+  .w { color: $base3 }
+  // Literal.Number.Bin
+  .mb { color: $cyan }
+  // Literal.Number.Float
+  .mf { color: $cyan }
+  // Literal.Number.Hex
+  .mh { color: $cyan }
+  // Literal.Number.Integer
+  .mi { color: $cyan }
+  // Literal.Number.Oct
+  .mo { color: $cyan }
+  // Literal.String.Affix
+  .sa { color: $cyan }
+  // Literal.String.Backtick
+  .sb { color: $cyan }
+  // Literal.String.Char
+  .sc { color: $cyan }
+  // Literal.String.Delimiter
+  .dl { color: $cyan }
+  // Literal.String.Doc
+  .sd { color: $cyan }
+  // Literal.String.Double
+  .s2 { color: $cyan }
+  // Literal.String.Escape
+  .se { color: $orange }
+  // Literal.String.Heredoc
+  .sh { color: $cyan }
+  // Literal.String.Interpol
+  .si { color: $orange }
+  // Literal.String.Other
+  .sx { color: $cyan }
+  // Literal.String.Regex
+  .sr { color: $cyan }
+  // Literal.String.Single
+  .s1 { color: $cyan }
+  // Literal.String.Symbol
+  .ss { color: $cyan }
+  // Name.Builtin.Pseudo
+  .bp { color: $blue; font-weight: bold }
+  // Name.Function.Magic
+  .fm { color: $blue }
+  // Name.Variable.Class
+  .vc { color: $blue }
+  // Name.Variable.Global
+  .vg { color: $blue }
+  // Name.Variable.Instance
+  .vi { color: $blue }
+  // Name.Variable.Magic
+  .vm { color: $orange }
+  // Literal.Number.Integer.Long
+  .il { color: $cyan }
+}
 
 
-// Pygments ===================================================================
-// pygmentize -S paraiso-dark -f html -a .highlight > pygment.css
+// ===========================================================================
+// STYLE =====================================================================
+// ===========================================================================
+
+$sans-serif: Arial, sans-serif;
+$serif: Times New Roman, serif;
+$monospace: monospace;
+
+.large {
+  font-size: 450%;
+}
+
+.medium {
+  font-size: 250%;
+}
+
+.small {
+  font-size: 150%;
+}
+
+.tiny {
+  font-size: 110%;
+}
+
+header {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+
+  background: $base2;
+  padding: 0.5em 1em;
+  margin-top: 2em;
+  margin-bottom: 0.3em;
+
+  nav {
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      list-style: none;
+    }
+    a {
+      padding: 1.25rem 0.5rem;
+      text-decoration: none;
+    }
+
+    a:hover, a:active, a:focus {
+      text-decoration: underline;
+      background: inherit;
+    }
+
+  }
+}
+
+.article-header {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  padding: 4em 1em;
+  margin-bottom: 2em;
+
+  background: $base03;
+  color: $yellow;
+}
+
+.article-content {
+  margin-left: 5em;
+  margin-right: 5em;
+  margin-bottom: 2em;
+  min-width: 32em;
+  max-width: 52em;
+}
+
+html {
+  font-family: $sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+a {
+  outline: none;
+
+  &:hover, &:active {
+    outline: none;
+    background: $base2;
+  }
+}
+
+h1, h2, h3, h4 {
+  font-family: $serif;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+strong {
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+code, pre {
+  font-family: $monospace;
+}
+
 code {
-  color: #e7e9db;
-  background: #776e71;
-  font-size: 0.95em;
   padding: 0.15em;
 }
 
-.linenos {
-  color: #776e71;
-  padding-right: 10px;
-}
-.highlighttable {
-  background: #2f1e2e;
-  padding: 5px 10px;
-  min-width: 50vw;
+pre {
+  padding: 1em;
+  line-height: 1.15;
 }
 
-.highlight {
-  background: #2f1e2e;
-  color: #e7e9db;
-  .hll { background: #4f424c; }
+p, pre {
+  margin-bottom: 0.5em;
+}
 
-  // Generic.Emph
-  .ge { font-style: italic }
+ol {
+  list-style-type: decimal;
+}
 
-  // Generic.Strong, Generic.Subheading, Generic.Heading, Generic.Prompt
-  .gs, .gu, .gh, .gp { font-weight: bold }
-
-  // Name.Attribute, Name.Function, Name.Other, Name.Function.Magic
-  .na, .nf, .nx, .fm { color: #06b6ef }
-
-  // Keyword.Type, Name.Class, Name.Namespace
-  .kt, .nc, .nn { color: #fec418 }
-
-  // Operator, Keyword.Namespace, Name.Decorator, Name.Tag, Operator.Word, Generic.Subheading
-  .o, .kn, .nd, .nt, .ow, .gu{ color: #5bc4bf }
-
-  // Name, Punctuation, Generic.Heading, Name.Builtin, Name.Entity,
-  // Name.Label, Name.Property, Text.Whitespace, Literal.String.Char
-  .n, .p, .gh, .nb, .ni, .nl, .py, .w, .sc { color: #e7e9db }
-
-  // Keyword, Keyword.Constant, Keyword.Declaration, Keyword.Pseudo, Keyword.Reserved
-  .k, .kc, .kd, .kp, .kr { color: #815ba4 }
-
-  // Error, Generic.Deleted, Name.Constant, Name.Exception, Name.Variable,
-  // Name.Variable.Class, Name.Variable.Global, Name.Variable.Instance, Name.Variable.Magic
-  .err, .gd, .no, .ne, .nv, .vc, .vg, .vi, .vm { color: #ef6155 }
-
-  // Comment, Comment.Hashbang, Comment.Multiline, Comment.Preproc, Comment.PreprocFile,
-  // Comment.Single, Comment.Special, Generic.Prompt, Literal.String.Doc
-  .c, .ch, .cm, .cp, .cpf, .c1, .cs, .gp, .sd { color: #776e71 }
-
-  // Generic.Inserted, Literal.Date, Literal.String, Literal.String.Affix, Literal.String.Backtick,
-  // Literal.String.Delimiter, Literal.String.Double, Literal.String.Heredoc, Literal.String.Other,
-  // Literal.String.Regex, Literal.String.Single, Literal.String.Symbol
-  .gi, .ld, .s, .sa, .sb, .dl, .s2, .sh, .sx, .sr, .s1, .ss { color: #48b685 }
-
-  // Literal, Literal.Number, Literal.Number.Bin, Literal.Number.Float, Literal.Number.Hex,
-  // Literal.Number.Integer, Literal.Number.Oct, Literal.String.Escape, Literal.String.Interpol, Name.Builtin.Pseudo,
-  // Literal.Number.Integer.Long
-  .l, .m, .mb, .mf, .mh, .mi, .mo, .se, .si, .bp, .il { color: #f99b15 }
+ul, ol {
+  padding-left: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  list-style-position: outside;
 }

@@ -1,9 +1,9 @@
 {% extends "_base.html" %}
 {% set title = page.title %}
 {% block content %}
-<div class="g g-v">
-    <span class="u-large g g-right">{{ page.title }}</span>
-    <span class="u-small g g-right">{{ page.locale_date }}</span>
-    <div class="container">{{ page.content }}</div>
+<div class="article-header">
+    <span class="large">{{ page.title }}</span>
+    <span class="small quiet">{{ page.locale_date }}</span>
 </div>
+<div class="article-content">{{ page.content }}</div>
 {% endblock %}

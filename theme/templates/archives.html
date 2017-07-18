@@ -1,13 +1,15 @@
 {% extends "_base.html" %}
 {% set title = "Archives" %}
 {% block content %}
-<div class="g g-v">
-    <span class="u-large g g-right">Archives</span>
+<div class="article-header">
+    <span class="large">Archives</span>
 </div>
+<div class="article-content">
 {% for article in dates %}
-<div class="u-block">
-    <span class="u-medium">{{ article.locale_date }}</span>
-    <span class="u-small"><a href="/{{ article.url }}">{{ article.title }}</a></span>
+<div style="display: block">
+    <span class="medium quiet">{{ article.locale_date }}</span>
+    <span class="small"><a href="/{{ article.url }}">{{ article.title }}</a></span>
 </div>
 {% endfor %}
+</div>
 {% endblock %}
