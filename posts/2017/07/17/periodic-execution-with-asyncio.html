@@ -1,27 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    
-<title>Periodic Execution With Asyncio</title>
-    <link href="/static/style.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha256-tkzDFSl16wERzhCWg0ge2tON2+D6Qe9iEaJqM4ZGd4E=" rel="stylesheet" crossorigin="anonymous" />
-</head>
-<body>
-<header>
-    <span class="tiny quiet">numberoverzero</span>
-    <nav role="navigation">
-        <ul>
-            <li><a class="small" href="/posts">/blog</a></li>
-            <li><a class="small" href="https://github.com/numberoverzero">/gh</a></li>
-            <li><a class="small" href="https://www.linkedin.com/in/numberoverzero">/in</a></li>
-        </ul>
-    </nav>
-</header>
+<title>Periodic Execution With Asyncio</title></head>
 
-<main id="mapp-container"><div class="article-header">
-<span class="large">Periodic Execution With Asyncio</span>
-<span class="small quiet">2017-07-17</span>
+<main><div class="article-header">
+    <span class="large">Periodic Execution With Asyncio</span>
+    <span class="small quiet">2017-07-17</span>
 </div>
 <div class="article-content"><p>A friend using <a class="reference external" href="http://bottom-docs.readthedocs.io/en/latest/">bottom</a> wants to run a periodic task to fetch rss feeds.  Asyncio is
 <a class="reference external" href="http://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/">rather complex</a>, so this post only explores one solution where periodic tasks are run on the same event loop.
@@ -86,7 +68,7 @@ method we really care about.</p>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">done</span><span class="p">:</span>
             <span class="n">url</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">feeds</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="s2">"{len(data)}.{secrets.token_hex(4)}"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feeds</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(data)}.{secrets.token_hex(4)}&quot;</span>
 
         <span class="c1"># TODO placeholder</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feeds</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -102,8 +84,8 @@ FeedUpdater, create a task in the loop, and run until the task is complete.</p>
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
 
 <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">"http://www.feedforall.com/sample.xml"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;http://feeds.abcnews.com/abcnews/topstories&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;http://www.feedforall.com/sample.xml&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">update</span> <span class="o">=</span> <span class="n">FeedUpdater</span><span class="p">(</span><span class="n">feeds</span><span class="o">=</span><span class="n">feeds</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 
@@ -113,8 +95,8 @@ FeedUpdater, create a task in the loop, and run until the task is complete.</p>
 <p>This will print the length of each html response plus a random nonce:</p>
 <div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
 <span class="go">{</span>
-<span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40697.7be0ad86",</span>
-<span class="go">    "http://www.feedforall.com/sample.xml": "8631.27544741"</span>
+<span class="go">    &quot;http://feeds.abcnews.com/abcnews/topstories&quot;: &quot;40697.7be0ad86&quot;,</span>
+<span class="go">    &quot;http://www.feedforall.com/sample.xml&quot;: &quot;8631.27544741&quot;</span>
 <span class="go">}</span>
 <span class="gp">$</span>
 </pre></div>
@@ -126,8 +108,8 @@ run_once.py above:</p>
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
 
 <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">"http://www.feedforall.com/sample.xml"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;http://feeds.abcnews.com/abcnews/topstories&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;http://www.feedforall.com/sample.xml&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">update</span> <span class="o">=</span> <span class="n">FeedUpdater</span><span class="p">(</span><span class="n">feeds</span><span class="o">=</span><span class="n">feeds</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 
@@ -142,16 +124,16 @@ run_once.py above:</p>
 <p>Which outputs:</p>
 <div class="highlight"><pre><span></span><span class="gp">$</span> python run_forever.py
 <span class="go">{</span>
-<span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40687.1e4ad4cc",</span>
-<span class="go">    "http://www.feedforall.com/sample.xml": "8631.4e022017"</span>
+<span class="go">    &quot;http://feeds.abcnews.com/abcnews/topstories&quot;: &quot;40687.1e4ad4cc&quot;,</span>
+<span class="go">    &quot;http://www.feedforall.com/sample.xml&quot;: &quot;8631.4e022017&quot;</span>
 <span class="go">}</span>
 <span class="go">{</span>
-<span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40687.ef91b35d",</span>
-<span class="go">    "http://www.feedforall.com/sample.xml": "8631.9cde3a7b"</span>
+<span class="go">    &quot;http://feeds.abcnews.com/abcnews/topstories&quot;: &quot;40687.ef91b35d&quot;,</span>
+<span class="go">    &quot;http://www.feedforall.com/sample.xml&quot;: &quot;8631.9cde3a7b&quot;</span>
 <span class="go">}</span>
 <span class="go">{</span>
-<span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40687.a9e2a105",</span>
-<span class="go">    "http://www.feedforall.com/sample.xml": "8631.f57b2583"</span>
+<span class="go">    &quot;http://feeds.abcnews.com/abcnews/topstories&quot;: &quot;40687.a9e2a105&quot;,</span>
+<span class="go">    &quot;http://www.feedforall.com/sample.xml&quot;: &quot;8631.f57b2583&quot;</span>
 <span class="go">}</span>
 </pre></div>
 </div>
@@ -182,8 +164,8 @@ for each task we want to run periodically.</p>
 <span class="n">schedule</span> <span class="o">=</span> <span class="n">create_scheduler</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 
 <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">"http://www.feedforall.com/sample.xml"</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="s2">&quot;http://feeds.abcnews.com/abcnews/topstories&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;http://www.feedforall.com/sample.xml&quot;</span><span class="p">:</span> <span class="kc">None</span>
 <span class="p">}</span>
 <span class="n">update</span> <span class="o">=</span> <span class="n">FeedUpdater</span><span class="p">(</span><span class="n">feeds</span><span class="o">=</span><span class="n">feeds</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 
@@ -195,18 +177,9 @@ for each task we want to run periodically.</p>
 </div>
 </main>
 <script type="application/javascript">
-    const rq=(c,b,a)=>{a=new XMLHttpRequest;a.open(b.m||"GET",c);a.responseType=b.r||"";a.timeout=b.t||0;Object.keys(b.h||0).forEach(c=>a.setRequestHeader(c,b.h[c]));return new Promise((c,d)=>{a.onreadystatechange=b=>{4==a.readyState&&[d,c][(!!a.response&&1==(a.status/200|0))|0](a)};a.ontimeout=b=>d(a);a.send(b.b||[]._)})};
-</script>
-<script src="/static/js/mapp.min.js" type="application/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha256-gNVpJCw01Tg4rruvtWJp9vS0rRchXP2YF+U+b2lp8Po=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
-<script type="application/javascript">
- "use strict";
+    "use strict";
     mapp.onShowPage(() => {
         document.title = "Periodic Execution With Asyncio";
         renderMathInElement(document.body);
     });
 </script>
-
-</body>
-</html>
