@@ -88,19 +88,14 @@ __ http://aiohttp.readthedocs.io/en/stable/client.html
 
 
 Let's say we just want to run this once.  Referring to the rules above we'll create a loop, create an instance of the
-FeedUpdater, create a task in the loop, and run until the task is complete.  Since we're still developing things, turn
-all the debugging to high:
+FeedUpdater, create a task in the loop, and run until the task is complete.
 
 .. code-block:: python3
 
     # run_once.py
 
     import asyncio
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-
     loop = asyncio.new_event_loop()
-    loop.set_debug(True)
 
     feeds = {
         "http://feeds.abcnews.com/abcnews/topstories": None,
@@ -111,30 +106,27 @@ all the debugging to high:
     task = loop.create_task(update())
     loop.run_until_complete(task)
 
-This will produce a bunch of debug output as aiohttp steps through the request process.  Omitting those lines,
-we'll eventually see the length of each html response plus a random nonce:
+This will print the length of each html response plus a random nonce:
 
 .. code-block:: console
 
     $ python run_once.py
-    DEBUG:asyncio:Using selector: EpollSelector
-    ...
-    ...
-    DEBUG:asyncio:poll 15446.009 ms took 74.108 ms: 1 events
     {
         "http://feeds.abcnews.com/abcnews/topstories": "40697.7be0ad86",
         "http://www.feedforall.com/sample.xml": "8631.27544741"
     }
-    DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
     $
 
 We can expand this to call :code:`update` every 3 seconds by wrapping it with another async function.  Modifying
-run_once.py above,  I've dropped the logging for readability:
+run_once.py above:
 
 .. code-block:: python3
 
+    # run_forever.py
+
     import asyncio
     loop = asyncio.new_event_loop()
+
     feeds = {
         "http://feeds.abcnews.com/abcnews/topstories": None,
         "http://www.feedforall.com/sample.xml": None,
@@ -153,7 +145,7 @@ Which outputs:
 
 .. code-block:: console
 
-    $ python run_once.py
+    $ python run_forever.py
     {
         "http://feeds.abcnews.com/abcnews/topstories": "40687.1e4ad4cc",
         "http://www.feedforall.com/sample.xml": "8631.4e022017"
@@ -190,13 +182,13 @@ for each task we want to run periodically.
         return loop.create_task(periodic_func())
     create_scheduler = lambda loop: functools.partial(loop=loop)
 
-In the following sample I've added a function to handle SIGINT gracefully, which demonstrates how to shut
-down the periodic task and event loop on CTRL + C.
+And adapting run_forever.py above, we have:
 
 .. code-block:: python3
 
-    def main():
-        import signal
+        # run_scheduled.py
+
+        import asyncio
         loop = asyncio.new_event_loop()
         schedule = create_scheduler(loop=loop)
 
@@ -205,16 +197,10 @@ down the periodic task and event loop on CTRL + C.
             "http://www.feedforall.com/sample.xml": None
         }
         update = FeedUpdater(feeds=feeds, loop=loop)
+
         refresh_task = schedule(update, interval=3)
-
-        def stop_refresh(signal, frame):
-            print("\nexiting...")
-            refresh_task.cancel()
-            loop.stop()
-        signal.signal(signal.SIGINT, stop_refresh)
-
         loop.run_forever()
 
+`Here's the whole thing as a gist`__.
 
-    if __name__ == "__main__":
-        main()
+__ https://gist.github.com/numberoverzero/71b2c0410cbdeca3229334c9bc05dc46
