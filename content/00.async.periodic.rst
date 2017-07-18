@@ -5,7 +5,7 @@ Periodic Execution With Asyncio
 :slug: periodic-execution-with-asyncio
 
 A friend using `bottom`__ wants to run a periodic task to fetch rss feeds.  Asyncio is
-`rather complex`__ , so this post only explores one solution where periodic tasks are run on the same event loop.
+`rather complex`__, so this post only explores one solution where periodic tasks are run on the same event loop.
 There exists an argument for using multiple event loops as a means to control execution priority, but that's
 outside the scope of periodically fetching rss feeds for a chat bot.
 

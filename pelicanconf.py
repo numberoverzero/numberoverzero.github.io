@@ -36,7 +36,7 @@ AUTHOR_FEED_RSS = None
 DEFAULT_PAGINATION = False
 
 PYGMENTS_RST_OPTIONS = {
-    "linenos": "table",
+    "linenos": "none",
 }
 
 # Uncomment following line if you want document-relative URLs when developing
