@@ -1,0 +1,328 @@
+Starcraft 2 Bank Signature Specification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:date: 2017-07-18
+:slug: starcraft-bank-signing
+:status: draft
+
+In addition to providing a specification for Starcraft II bank signatures, this post also aims to introduce bank files
+at a high level, dispel common misunderstandings around signatures and encryption as they relate to banks, and
+introduce half-baked proposals for properly securing bank files via additional APIs from Blizzard.
+
+
+Background
+==========
+
+A number of tools exist to modify bank files, but are often incomplete or not user friendly.  These usually only
+deal with the Blizzard-provided signing mechanism, which is a SHA-1 of a canonical representation of the bank
+contents, player account and map author account numbers, and bank name.
+
+This signature does not prevent local modifications, but is a form of security through obscurity.  Modifying an xml
+file by hand is a high bar for most players, even if tools automatically regenerate the signature.
+
+In addition to the signing mechanism, map authors will intentionally obfuscate variable names and values.
+In the sample "Hero Survival J" bank file below, there is an int "level" with the value "91" that could easily be
+changed to "121" for an increase in power.  A common first step is to rename obvious variables, so that "level" becomes
+"boring_variable_a".  Then, a simple form of obfuscation might be to base64 encode this int as a string and reverse
+the process when reading:
+
+.. code-block:: pycon
+
+    >>> import base64
+    >>> level = b"91"
+    >>> base64.b64encode(level)
+    b"OTE="
+    >>> base64.b64decode(b"OTE=")
+    b"91"
+
+This makes it harder to locate significant values with a casual scan.  Adding unused but similarly named variables will
+further increase the time it takes for a user to identify the important keys.
+
+Some authors have opted for full AES encryption through libraries like STARCODE.  Because the encryption secret must
+be available to the user's client (usually by unpacking the game triggers) this is nothing more than an expensive
+layer of security through obscurity.  If your users have already committed to de-obfuscating variable names in
+the bank file, this is a negligible deterrent that they'll sidestep in the process of filtering out useless variables.
+
+* **Q. What is a bank file used for?**
+
+  Bank files are simple XML files used to non-durably persist data between sessions in custom games.  They may be used
+  to track hero progress in an RPG, or inventories or currencies.
+
+* **Q. What does a bank file look like?**
+
+  Here's my bank file for Hero Survival J:
+
+  .. code-block:: xml
+
+      <?xml version="1.0" encoding="utf-8"?>
+      <Bank version="1">
+          <Section name="playerproperty">
+              <Key name="level">
+                  <Value int="91"/>
+              </Key>
+              <Key name="powerlevel">
+                  <Value int="10774"/>
+              </Key>
+          </Section>
+          <Signature value="A31E446AD4AFD85050CB4779889C53BFDF9CDBCA"/>
+      </Bank>
+
+* **Q. Where are they stored?**
+
+  Blizzard does not offer storage for these files, which means the bank file for one map for battle.net account
+  may differ across two hosts.  All banks are stored somewhere in your home directory.  Here's the Starcraft II
+  account root on Windows::
+
+      C:\Users\<USER>\Documents\StarCraft II
+
+  From there, an individual map's bank file will be stored at::
+
+      ..\Accounts\<NUMBERS>\<ACCOUNT_NUMBER>\Banks\<AUTHOR_NUMBER>\<BANK_NAME>.SC2Bank
+
+  Everything after the root is independent of OS.  Once you replace backslashes with forward slashes, the
+  following python regex should be usable across all platforms:
+
+  .. code-block:: python
+
+      import re
+      bank_pattern = re.compile("""
+          Accounts/\d{8}/
+          (?P<player_number>1-S2-1-\d+)
+          /Banks/
+          (?P<author_number>1-S2-1-\d+)
+          /(?P<bank_name>.+)
+          \.SC2Bank$
+          """.strip(), re.VERBOSE)
+
+
+      def parse(bank_path: str) -> Optional[Dict[str, str]]:
+          bank_path = bank_path.replace("\\", "/")
+          m = bank_pattern.match(bank_path)
+          if m:
+              return m.groupdict()
+          return None
+
+* **Q. What stops me from changing the bank file by hand?**
+
+  Security through obscurity:
+
+  1. Few users know bank files exist.
+  2. Less know where they are stored.
+  3. Less know how to open or modify them.
+  4. Less know how to sign them.
+
+  At this point you're left with users that have found bank editing tools and trigger extraction tools.  If the author
+  chooses to obfuscate variable names you can further reduce the list:
+
+  5. Less know how to step through ``.galaxy`` scripts.
+  6. Less know how to identify significant variables based on library calls, such as::
+
+         PlayerModifyPropertyInt(
+             lib1_gv_psave3, c_playerPropMinerals, c_playerPropOperSetTo,
+             BankValueGetAsInt(BankLastCreated(), "pmin", "pmin")
+         );
+  7. Finally, users may need to reconstruct strings for eg. AES decryption by stepping through intentionally
+     obfuscated code.  This is a non-trivial process that requires parsing and debugging code, often without the
+     ability to run it (then the bank would fail to validate/the encryption key would not generate properly).
+
+Common Misconceptions
+=====================
+
+There's a ton of vocabulary and I won't attempt to cover signing, hashes, and encryption here.  Instead, I'll try to
+dispel a few myths and misunderstandings about bank protection that keep coming up.
+
+* **Signatures are only easy to crack because SHA-1 is weak**
+
+  The strength of SHA-1 is not relevant here, because our attacker (local user) has access to all of the data
+  necessary to construct a valid signature.  Consider a signing scheme where instead of SHA-1, bank files are signed
+  by computing the SHA-256 of the map name and the date.  Even though SHA-256 is "stronger" than SHA-1, it doesn't
+  matter because everyone has the information necessary to compute the correct signature.
+
+* **Encoding data as integers will make banks tamper-proof**
+
+  If you imagine that encoding is translating between languages, then it's immediately obvious that encoding will only
+  make it harder to find the correct keys and values, but won't prevent users from reversing your process.  There's
+  nothing special about integers that makes them impossible to read (otherwise, how would we get the data back after
+  encoding it?).  The best you can do is encode using a secret process that only you know.  Unfortunately, the user's
+  game must have some way to read the data so you can't keep the process a secret without preventing them from using
+  that data.
+
+* **Well, using Actual Real Encryption like AES will make banks tamper-proof**
+
+  This suffers from the same problem as above; even if you invent your own encoding the game needs some way to decode
+  the data into a usable format.  You'll need a symmetric key (usually from some password or secret) for AES, which
+  means the password must live somewhere in the map data (usually the map triggers) and once again the user can simply
+  extract those and freely modify the values.
+
+* **As long as banks live on the user's computer, there's no way to make it tamper-proof**
+
+  None of the methods mentioned above will do the trick, but there are a number of things that Blizzard can do.  For
+  example, AES is perfectly fine as long as the secret isn't available to the user.  If the bank file is stored
+  encrypted on the user's machine with a symmetric key derived from a password that never leaves Blizzard's servers,
+  you could guarantee that the user can't modify their data without actually storing the data on a Blizzard server.
+
+  When the map loads, the user's client would send the bank file to the server asking for a decrypt.  The server looks
+  up the AES key for the map (optionally per user) and then tries to decrypt the bank.  If the decrypt is successful
+  it returns the bank file to the user's client, which resumes the normal loading process.
+
+  To save the bank, the user's client sends the bank file to the server asking for an encrypt.  The server looks up
+  the AES key for the map (optionally per user) and then encrypts the bank, returning the bank file to the user's
+  client for local storage.
+
+Where Does That Leave Us?
+=========================
+
+As of July 2017, there is no way to prevent or detect users modifying bank files locally.  The best methods available
+today involve multiple layers of obfuscation: post-processing galaxy scripts to replace variable names and
+strings with random data, and encode simple values such as levels or mineral quantities using complex functions that
+are hard to debug.  AES is not worth the time at all, since obfuscating the encryption secret is equally as hard as
+obfuscating a custom encoding scheme.
+
+Map authors that want to prevent (or at least detect) user modifications should petition Blizzard to provide APIs
+for encrypting or storing bank files.  While the latter is the best user experience (no longer using local storage
+means banks can persist across computers) it may be easier to first get Blizzard to expose apis for encrypting and
+decrypting individual values or whole banks.  Although bank files would still be stored locally, keeping the secret
+keys away from the users (and map authors, or you're in for some good old social engineering and password resets)
+locks them out of modifying the bank file.
+
+With asymmetric encryption users could even read banks offline using a public key downloaded with the map; Blizzard
+still holds the private key and is the only one that can write changes to the local file.  A more complex model could
+allow the user to have a copy of the bank in offline write mode, where they can write and encrypt changes to a local
+copy with their own private key, but those changes are never persisted back to the server.
+
+Signature Specification
+=======================
+
+The signature is stored in the :code:`Bank.Signature["value"]` path of the bank file, and is an uppercase hex digest
+of the :code:`StringToSign`.  The example will use the "Hero Survival J" bank file:
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <Bank version="1">
+        <Section name="playerproperty">
+            <Key name="level">
+                <Value int="91"/>
+            </Key>
+            <Key name="powerlevel">
+                <Value int="10774"/>
+            </Key>
+        </Section>
+        <Signature value="A31E446AD4AFD85050CB4779889C53BFDF9CDBCA"/>
+    </Bank>
+
+Located at the following path::
+
+    ..\Accounts\79608249\1-S2-1-3638286\Banks\1-S2-1-2631253\hjbank.SC2Bank
+
+
+1. **Preamble**
+
+   Concatenate the author number, player number, and bank name with no delimiter.  Referring to the regex from the
+   background section, the author number would be :code:`1-S2-1-2631253`, the player number would be
+   :code:`1-S2-1-3638286` and the bank name is :code:`hjbank`.  The beginning of the :code:`StringToSign`
+   is therefore::
+
+       1-S2-1-26312531-S2-1-3638286hjbank
+
+2. **Sorting**
+
+   1. Sort the :code:`Section` elements in the bank file according to their names.
+   2. In each :code:`Section` element, sort each :code:`Key` element by its name.
+   3. In each :code:`Key` element, sort each node by its name.
+
+3. **Loop over Sections**
+
+   * For each section:
+
+     * Add the section name to the :code:`StringToSign`.
+     * For each Key:
+
+       * Add the key name to the :code:`StringToSign`.
+       * For each element in the Key:
+
+         * Add the element name to the :code:`StringToSign`.
+         * Add the element type to the :code:`StringToSign`.
+         * If the type is not :code:`"text"`, add the value to the :code:`StringToSign`.
+
+4. **Compute Hash**
+
+   Compute the SHA-1 of the :code:`StringToSign`, and uppercase the hex digest.
+   Store the result in :code:`Bank.Signature["value"]` in the bank file.
+
+The sample bank is very simple, so it doesn't demonstrate some of the nested iteration.  Adding in line breaks and
+indentation to show the preamble, each section, and each key, the final :code:`StringToSign` is::
+
+    1-S2-1-26312531-S2-1-3638286hjbank
+    player
+      property
+        level
+          Valueint91
+        powerlevel
+          Valueint10774
+
+Quickly verifying that we get the correct signature:
+
+.. code-block:: pycon
+
+    >>> import hashlib
+    >>> sts = (b"1-S2-1-26312531-S2-1-3638286"
+    ...        b"hjbankplayerpropertylevelValue"
+    ...        b"int91powerlevelValueint10774")
+    >>> hashlib.sha1(sts).hexdigest().upper()
+    "A31E446AD4AFD85050CB4779889C53BFDF9CDBCA"
+
+
+Here's a simplified excerpt from a larger bank.  Let's assume the player number is :code:`1234`,
+the author number is :code:`987`, and the bank name is :code:`my_bank`.
+
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <Bank version="1">
+        <Section name="pmin">
+            <Key name="pmin">
+                <Value int="6547"/>
+            </Key>
+        </Section>
+        <Section name="phero">
+            <Key name="phero">
+                <Item3 string="JagsRing"/>
+                <ItemCount int="5"/>
+                <Type string="Grovan"/>
+                <Shields fixed="0"/>
+                <XP fixed="5200"/>
+                <Item1 string="ThraxGreaves"/>
+                <Life fixed="3761"/>
+                <Item4 string="ThraxGloves"/>
+                <Energy fixed="5056"/>
+                <Item2 string="ThraxChestplate"/>
+                <Item0 string="LaserDrill"/>
+            </Key>
+        </Section>
+        <Section name="pgas">
+            <Key name="pgas">
+                <Value int="90"/>
+            </Key>
+        </Section>
+    </Bank>
+
+
+This file has the following :code:`StringToSign`, again adding line breaks and indentation for readability::
+
+    9871234my_bank
+    pgaspgasValueint90
+    pherophero
+      Energyfixed5056
+      Item0stringLaserDrill
+      Item1stringThraxGreaves
+      Item2stringThraxChestplate
+      Item3stringJagsRing
+      Item4stringThraxGloves
+      ItemCountint5
+      Lifefixed3761
+      TypestringGrovan
+      Shieldsfixed0
+      XPfixed5200
+    pminpminValueint6547
