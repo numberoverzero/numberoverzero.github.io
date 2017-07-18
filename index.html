@@ -9,27 +9,23 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha256-tkzDFSl16wERzhCWg0ge2tON2+D6Qe9iEaJqM4ZGd4E=" rel="stylesheet" crossorigin="anonymous" />
 </head>
 <body>
-<div class="g g-v">
-    <div class="g g-h g-top">
-        <span class="g g-left u-small">numberoverzero</span>
-        <nav class="g g-right">
-            <span class="u-small">
-                <a href="/posts">/blog</a>
-            </span>
-            <span class="u-small">
-                <a href="https://github.com/numberoverzero">/gh</a>
-            </span>
-            <span class="u-small">
-                <a href="https://www.linkedin.com/in/numberoverzero">/in</a>
-            </span>
-        </nav>
-    </div>
+<header>
+    <span class="tiny quiet">numberoverzero</span>
+    <nav role="navigation">
+        <ul>
+            <li><a class="small" href="/posts">/blog</a></li>
+            <li><a class="small" href="https://github.com/numberoverzero">/gh</a></li>
+            <li><a class="small" href="https://www.linkedin.com/in/numberoverzero">/in</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main id="mapp-container"><div class="article-header">
+<span class="large">Periodic Execution With Asyncio</span>
+<span class="small quiet">2017-07-17</span>
 </div>
-<main id="mapp-container"><div class="g g-v">
-<span class="u-large g g-right">Periodic Execution With Asyncio</span>
-<span class="u-small g g-right">2017-07-17</span>
-<div class="container"><p>A friend using <a class="reference external" href="http://bottom-docs.readthedocs.io/en/latest/">bottom</a> wants to run a periodic task to fetch rss feeds.  Asyncio is
-<a class="reference external" href="http://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/">rather complex</a> , so this post only explores one solution where periodic tasks are run on the same event loop.
+<div class="article-content"><p>A friend using <a class="reference external" href="http://bottom-docs.readthedocs.io/en/latest/">bottom</a> wants to run a periodic task to fetch rss feeds.  Asyncio is
+<a class="reference external" href="http://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/">rather complex</a>, so this post only explores one solution where periodic tasks are run on the same event loop.
 There exists an argument for using multiple event loops as a means to control execution priority, but that's
 outside the scope of periodically fetching rss feeds for a chat bot.</p>
 <p><strong>tl;dr</strong> if you prefer to jump right into the code, <a class="reference external" href="https://gist.github.com/numberoverzero/71b2c0410cbdeca3229334c9bc05dc46">here's a gist</a> of the final product.</p>
@@ -44,19 +40,14 @@ outside the scope of periodically fetching rss feeds for a chat bot.</p>
 <li><p class="first">Use <code>await</code> to call and wait for another async function.</p>
 </li>
 <li><p class="first">For development, enable debugging so exceptions don't go to the void:</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
 <span class="n">loop</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 </pre></div>
-</td></tr></table></li>
+</li>
 </ol>
 </div>
 <div class="section" id="the-rss-updater">
@@ -65,44 +56,7 @@ outside the scope of periodically fetching rss feeds for a chat bot.</p>
 idea about scheduling and for ease of debugging just stores the response length and a nonce (so we can see it change).
 This uses an <a class="reference external" href="http://aiohttp.readthedocs.io/en/stable/client.html">aiohttp.ClientSession</a> to make asynchronous GETs.  The class is callable, since there's only one
 method we really care about.</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">secrets</span>
 
@@ -141,26 +95,10 @@ method we really care about.</p>
     <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
-</td></tr></table><p>Let's say we just want to run this once.  Referring to the rules above we'll create a loop, create an instance of the
+<p>Let's say we just want to run this once.  Referring to the rules above we'll create a loop, create an instance of the
 FeedUpdater, create a task in the loop, and run until the task is complete.  Since we're still developing things, turn
 all the debugging to high:</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># run_once.py</span>
+<div class="highlight"><pre><span></span><span class="c1"># run_once.py</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -178,19 +116,9 @@ all the debugging to high:</p>
 <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">update</span><span class="p">())</span>
 <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 </pre></div>
-</td></tr></table><p>This will produce a bunch of debug output as aiohttp steps through the request process.  Omitting those lines,
+<p>This will produce a bunch of debug output as aiohttp steps through the request process.  Omitting those lines,
 we'll eventually see the length of each html response plus a random nonce:</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
+<div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
 <span class="go">DEBUG:asyncio:Using selector: EpollSelector</span>
 <span class="go">...</span>
 <span class="go">...</span>
@@ -202,23 +130,9 @@ we'll eventually see the length of each html response plus a random nonce:</p>
 <span class="go">DEBUG:asyncio:Close &lt;_UnixSelectorEventLoop running=False closed=False debug=True&gt;</span>
 <span class="gp">$</span>
 </pre></div>
-</td></tr></table><p>We can expand this to call <code>update</code> every 3 seconds by wrapping it with another async function.  Modifying
+<p>We can expand this to call <code>update</code> every 3 seconds by wrapping it with another async function.  Modifying
 run_once.py above,  I've dropped the logging for readability:</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
 <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -234,20 +148,8 @@ run_once.py above,  I've dropped the logging for readability:</p>
 <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">constant_update</span><span class="p">())</span>
 <span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
 </pre></div>
-</td></tr></table><p>Which outputs:</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
+<p>Which outputs:</p>
+<div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
 <span class="go">{</span>
 <span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40687.1e4ad4cc",</span>
 <span class="go">    "http://www.feedforall.com/sample.xml": "8631.4e022017"</span>
@@ -261,25 +163,12 @@ run_once.py above,  I've dropped the logging for readability:</p>
 <span class="go">    "http://www.feedforall.com/sample.xml": "8631.f57b2583"</span>
 <span class="go">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <div class="section" id="a-general-scheduler">
 <h2>A General Scheduler</h2>
 <p>The last step is to generalize the <code>constant_update</code> function so that we don't write one
 for each task we want to run periodically.</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">functools</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">functools</span>
 <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">loop</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
@@ -294,31 +183,9 @@ for each task we want to run periodically.</p>
     <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">periodic_func</span><span class="p">())</span>
 <span class="n">create_scheduler</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">loop</span><span class="p">:</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 </pre></div>
-</td></tr></table><p>In the following sample I've added a function to handle SIGINT gracefully, which demonstrates how to shut
+<p>In the following sample I've added a function to handle SIGINT gracefully, which demonstrates how to shut
 down the periodic task and event loop on CTRL + C.</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="kn">import</span> <span class="nn">signal</span>
     <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
     <span class="n">schedule</span> <span class="o">=</span> <span class="n">create_scheduler</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
@@ -342,7 +209,6 @@ down the periodic task and event loop on CTRL + C.</p>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
 </div>
 </div>
 </main>
