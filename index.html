@@ -95,16 +95,11 @@ method we really care about.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 <p>Let's say we just want to run this once.  Referring to the rules above we'll create a loop, create an instance of the
-FeedUpdater, create a task in the loop, and run until the task is complete.  Since we're still developing things, turn
-all the debugging to high:</p>
+FeedUpdater, create a task in the loop, and run until the task is complete.</p>
 <div class="highlight"><pre><span></span><span class="c1"># run_once.py</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
-<span class="n">loop</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -115,24 +110,21 @@ all the debugging to high:</p>
 <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">update</span><span class="p">())</span>
 <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 </pre></div>
-<p>This will produce a bunch of debug output as aiohttp steps through the request process.  Omitting those lines,
-we'll eventually see the length of each html response plus a random nonce:</p>
+<p>This will print the length of each html response plus a random nonce:</p>
 <div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
-<span class="go">DEBUG:asyncio:Using selector: EpollSelector</span>
-<span class="go">...</span>
-<span class="go">...</span>
-<span class="go">DEBUG:asyncio:poll 15446.009 ms took 74.108 ms: 1 events</span>
 <span class="go">{</span>
 <span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40697.7be0ad86",</span>
 <span class="go">    "http://www.feedforall.com/sample.xml": "8631.27544741"</span>
 <span class="go">}</span>
-<span class="go">DEBUG:asyncio:Close &lt;_UnixSelectorEventLoop running=False closed=False debug=True&gt;</span>
 <span class="gp">$</span>
 </pre></div>
 <p>We can expand this to call <code>update</code> every 3 seconds by wrapping it with another async function.  Modifying
-run_once.py above,  I've dropped the logging for readability:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+run_once.py above:</p>
+<div class="highlight"><pre><span></span><span class="c1"># run_forever.py</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+
 <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">"http://www.feedforall.com/sample.xml"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -148,7 +140,7 @@ run_once.py above,  I've dropped the logging for readability:</p>
 <span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
 </pre></div>
 <p>Which outputs:</p>
-<div class="highlight"><pre><span></span><span class="gp">$</span> python run_once.py
+<div class="highlight"><pre><span></span><span class="gp">$</span> python run_forever.py
 <span class="go">{</span>
 <span class="go">    "http://feeds.abcnews.com/abcnews/topstories": "40687.1e4ad4cc",</span>
 <span class="go">    "http://www.feedforall.com/sample.xml": "8631.4e022017"</span>
@@ -182,32 +174,23 @@ for each task we want to run periodically.</p>
     <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">periodic_func</span><span class="p">())</span>
 <span class="n">create_scheduler</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">loop</span><span class="p">:</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 </pre></div>
-<p>In the following sample I've added a function to handle SIGINT gracefully, which demonstrates how to shut
-down the periodic task and event loop on CTRL + C.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="kn">import</span> <span class="nn">signal</span>
-    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
-    <span class="n">schedule</span> <span class="o">=</span> <span class="n">create_scheduler</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
+<p>And adapting run_forever.py above, we have:</p>
+<div class="highlight"><pre><span></span><span class="c1"># run_scheduled.py</span>
 
-    <span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">"http://www.feedforall.com/sample.xml"</span><span class="p">:</span> <span class="kc">None</span>
-    <span class="p">}</span>
-    <span class="n">update</span> <span class="o">=</span> <span class="n">FeedUpdater</span><span class="p">(</span><span class="n">feeds</span><span class="o">=</span><span class="n">feeds</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
-    <span class="n">refresh_task</span> <span class="o">=</span> <span class="n">schedule</span><span class="p">(</span><span class="n">update</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+<span class="n">schedule</span> <span class="o">=</span> <span class="n">create_scheduler</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">stop_refresh</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">exiting..."</span><span class="p">)</span>
-        <span class="n">refresh_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
-        <span class="n">loop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">stop_refresh</span><span class="p">)</span>
+<span class="n">feeds</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"http://feeds.abcnews.com/abcnews/topstories"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">"http://www.feedforall.com/sample.xml"</span><span class="p">:</span> <span class="kc">None</span>
+<span class="p">}</span>
+<span class="n">update</span> <span class="o">=</span> <span class="n">FeedUpdater</span><span class="p">(</span><span class="n">feeds</span><span class="o">=</span><span class="n">feeds</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
 
-    <span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+<span class="n">refresh_task</span> <span class="o">=</span> <span class="n">schedule</span><span class="p">(</span><span class="n">update</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
 </pre></div>
+<p><a class="reference external" href="https://gist.github.com/numberoverzero/71b2c0410cbdeca3229334c9bc05dc46">Here's the whole thing as a gist</a>.</p>
 </div>
 </div>
 </main>
