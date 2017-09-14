@@ -1,0 +1,183 @@
+Factoring Large Coprimes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+:date: 2017-09-13
+:slug: factoring-large-coprimes
+:status: draft
+
+The Setup
+=========
+
+Given:
+
+* integral base \\(b\\)
+* primes \\(P\\) and \\(Q\\)
+
+Then:
+
+.. raw:: html
+
+    $$
+    \begin{aligned}
+        S = P \cdot Q \\[1em]
+        n = \lfloor log_b{S}\rfloor + 1
+    \end{aligned}
+    $$
+
+And we can express each factor as:
+
+.. raw:: html
+
+    $$
+    \begin{array}{ccc}
+        P = \sum_{i=0}^{n} p_i b^i &
+        Q = \sum_{i=0}^{n} q_i b^i &
+        S = \sum_{i=0}^{n} s_i b^i
+    \end{array}
+    $$
+
+Long Multiplication
+===================
+
+Given the following \\(P, Q, S\\) in decimal (\\(b=10\\)):
+
+.. raw:: html
+
+    $$
+    \begin{array}{ccccccccc|c}
+          &   &   &        & 2 & 1 & 2 & 2 & 7 & P \\
+          &   &   & \times & 1 & 7 & 2 & 0 & 9 & Q \\
+        - & - & - & -      & - & - & - & - & - & - \\
+        3 & 6 & 5 & 2      & 9 & 5 & 4 & 4 & 3 & S \\
+    \end{array}
+    $$
+
+Imagine that instead we only know \\(S\\) and want to solve for \\(p_0, q_0\\):
+
+
+.. raw:: html
+
+    $$
+    \begin{array}{ccccccccc|c}
+        ? & ? & ? & ? & ? & ? & ? & ? & p_0 & P \\
+        ? & ? & ? & ? & ? & ? & ? & ? & q_0 & Q \\
+        - & - & - & - & - & - & - & - & -   & - \\
+        3 & 6 & 5 & 2 & 9 & 5 & 4 & 4 & 3   & S \\
+    \end{array}
+    $$
+
+The digits can only be \\((7, 9)\\) or \\((1, 3)\\).  Assume we guess correctly and now have:
+
+
+.. raw:: html
+
+    $$
+    \begin{array}{ccccccccc|c}
+          &   &   &   &   &   &   & 6   & 0 & carry \\
+        - & - & - & - & - & - & - & -   & - & -     \\
+        ? & ? & ? & ? & ? & ? & ? & p_1 & 7 & P     \\
+        ? & ? & ? & ? & ? & ? & ? & q_1 & 9 & Q     \\
+        - & - & - & - & - & - & - & -   & - & -     \\
+        3 & 6 & 5 & 2 & 9 & 5 & 4 & 4   & 3 & S     \\
+    \end{array}
+    $$
+
+When we start to solve for \\((p_1, q_1)\\) we can temporarily simplify the equation to:
+
+.. raw:: html
+
+    $$
+    \begin{array}{ccc|c}
+              & 6   & 0 & carry \\
+        -     & -   & - & -     \\
+        p_2   & p_1 & 7 & P     \\
+        q_2   & q_1 & 9 & Q     \\
+        -     & -   & - & -     \\
+        s_2   & 4   & 3 & S     \\
+    \end{array}
+    $$
+
+We need to solve the following equation so that its last digit is \\(s_1\\), or 4:
+
+.. raw:: html
+
+    $$
+        9p_1 + 7q_1 + 6 = s_1 + carry
+    $$
+
+First, let \\(r_0=63\\) so that:
+
+.. raw:: html
+
+    $$
+    \begin{aligned}
+        s_0 & = r_0 - 10 \lfloor \frac{r_0}{10} \rfloor \\[1.5em]
+        s_i & = r_i - b \lfloor \frac{r_i}{b} \rfloor \qquad \text{(for some base b)}
+    \end{aligned}
+    $$
+
+Next, we can express the product of any column \\(i\\) as the sum of products of the diagonal of digits in \\(P, Q\\):
+
+.. raw:: html
+
+    $$
+        R_i = \sum_{j=0}^{i} p_{i} q_{j-i}
+    $$
+
+For example, for 456 * 789:
+
+.. raw:: html
+
+    $$
+    \begin{array}{c|c|c|c|c|c}
+             &      & 4    & 5    & 6    &     \\
+             &      & 7    & 8    & 9    &     \\
+        ---- & ---- & ---- & ---- & ---- & --- \\
+             &      & 9*4  & 9*5  & 9*6  & SUM \\
+             & 8*4  & 8*5  & 8*6  &      &     \\
+        7*4  & 7*5  & 7*6  &      &      &     \\
+        ---- & ---- & ---- & ---- & ---- & --- \\
+        7*4 & 8*4 + 7*5 & 9*4 + 8*5 + 7*6 & 9*5 + 8*6 & 9*6 &
+    \end{array}
+    $$
+
+When \\(i=0\\), we have \\(r_i=R_i\\).  Otherwise, each \\(r_i\\) needs to include the carry
+from the previous \\(r_{i-1}\\):
+
+.. raw:: html
+
+    $$
+        r_i = R_i + \lfloor \frac{r_{i_1}}{b} \rfloor
+    $$
+
+With these three equations, we can iteratively step right to left selecting candidate digits to find the desired
+product:
+
+.. raw:: html
+
+    $$
+    \begin{aligned}
+        R_i & = \sum_{j=0}^{i} p_{i} q_{j-i}            \\[1em]
+        r_i & = R_i + \lfloor \frac{r_{i-1}}{b} \rfloor  \\[1em]
+        s_i & = r_i - b \lfloor \frac{r_{i}}{b} \rfloor
+    \end{aligned}
+    $$
+
+Different Bases
+===============
+
+Moving to \\(b=2\\) simplifies a number of constructs above.  Primarily, the last digit must always be 1 (both primes
+are odd) and so the diagonal product becomes:
+
+.. raw:: html
+
+    $$
+    popcount(p\ \&\ reverse(q))
+    $$
+
+There are also only two candidates for each pair since \\(s_i\\) can only be 0 or 1; this can be simplified to eg.
+a lookup table using an extra bit for the permutation index (we need to try (1, 0) and (0, 1) or (0, 0) and (1, 1) as
+we step forward).
+
+I suspect that normalized graphs of \\( (i, r_i) \\text{ for bases } b \\in [2,min(P,Q)) \\) may suggest some function to predict \\(r_i\\)
+which reduces the convergence time of finding \\(P, Q\\).
