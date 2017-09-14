@@ -1,0 +1,121 @@
+<div class="article-header">
+<span class="large">Factoring Large Co-primes</span>
+<span class="small quiet">2017-09-13</span>
+</div>
+<div class="article-content"><div class="section" id="the-setup">
+<h2>The Setup</h2>
+<p>Given:</p>
+<ul class="simple">
+<li>integral base \(b\)</li>
+<li>primes \(P\) and \(Q\)</li>
+</ul>
+<p>Then:</p>
+$$
+\begin{aligned}
+    S = P \cdot Q \\[1em]
+    n = \lfloor log_b{S}\rfloor + 1
+\end{aligned}
+$$<p>And we can express each factor as:</p>
+$$
+\begin{array}{ccc}
+    P = \sum_{i=0}^{n} p_i b^i &amp;
+    Q = \sum_{i=0}^{n} q_i b^i &amp;
+    S = \sum_{i=0}^{n} s_i b^i
+\end{array}
+$$</div>
+<div class="section" id="long-multiplication">
+<h2>Long Multiplication</h2>
+<p>Given the following \(P, Q, S\) in decimal (\(b=10\)):</p>
+$$
+\begin{array}{ccccccccc|c}
+      &amp;   &amp;   &amp;        &amp; 2 &amp; 1 &amp; 2 &amp; 2 &amp; 7 &amp; P \\
+      &amp;   &amp;   &amp; \times &amp; 1 &amp; 7 &amp; 2 &amp; 0 &amp; 9 &amp; Q \\
+    - &amp; - &amp; - &amp; -      &amp; - &amp; - &amp; - &amp; - &amp; - &amp; - \\
+    3 &amp; 6 &amp; 5 &amp; 2      &amp; 9 &amp; 5 &amp; 4 &amp; 4 &amp; 3 &amp; S \\
+\end{array}
+$$<p>Imagine that instead we only know \(S\) and want to solve for \(p_0, q_0\):</p>
+$$
+\begin{array}{ccccccccc|c}
+    ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; p_0 &amp; P \\
+    ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; q_0 &amp; Q \\
+    - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; -   &amp; - \\
+    3 &amp; 6 &amp; 5 &amp; 2 &amp; 9 &amp; 5 &amp; 4 &amp; 4 &amp; 3   &amp; S \\
+\end{array}
+$$<p>The digits can only be \((7, 9)\) or \((1, 3)\).  Assume we guess correctly and now have:</p>
+$$
+\begin{array}{ccccccccc|c}
+      &amp;   &amp;   &amp;   &amp;   &amp;   &amp;   &amp; 6   &amp; 0 &amp; carry \\
+    - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; -   &amp; - &amp; -     \\
+    ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; p_1 &amp; 7 &amp; P     \\
+    ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; ? &amp; q_1 &amp; 9 &amp; Q     \\
+    - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; - &amp; -   &amp; - &amp; -     \\
+    3 &amp; 6 &amp; 5 &amp; 2 &amp; 9 &amp; 5 &amp; 4 &amp; 4   &amp; 3 &amp; S     \\
+\end{array}
+$$<p>When we start to solve for \((p_1, q_1)\) we can temporarily simplify the equation to:</p>
+$$
+\begin{array}{ccc|c}
+          &amp; 6   &amp; 0 &amp; carry \\
+    -     &amp; -   &amp; - &amp; -     \\
+    p_2   &amp; p_1 &amp; 7 &amp; P     \\
+    q_2   &amp; q_1 &amp; 9 &amp; Q     \\
+    -     &amp; -   &amp; - &amp; -     \\
+    s_2   &amp; 4   &amp; 3 &amp; S     \\
+\end{array}
+$$<p>We need to solve the following equation so that its last digit is \(s_1\), or 4:</p>
+$$
+    9p_1 + 7q_1 + 6 = s_1 + carry
+$$<p>First, let \(r_0=63\) so that:</p>
+$$
+\begin{aligned}
+    s_0 &amp; = r_0 - 10 \lfloor \frac{r_0}{10} \rfloor \\[1.5em]
+    s_i &amp; = r_i - b \lfloor \frac{r_i}{b} \rfloor \qquad \text{(for some base b)}
+\end{aligned}
+$$<p>Next, we can express the product of any column \(i\) as the sum of products of the diagonal of digits in \(P, Q\):</p>
+$$
+    R_i = \sum_{j=0}^{i} p_{i} q_{j-i}
+$$<p>For example, for 456 * 789:</p>
+$$
+\begin{array}{c|c|c|c|c|c}
+         &amp;      &amp; 4    &amp; 5    &amp; 6    &amp;     \\
+         &amp;      &amp; 7    &amp; 8    &amp; 9    &amp;     \\
+    ---- &amp; ---- &amp; ---- &amp; ---- &amp; ---- &amp; --- \\
+         &amp;      &amp; 9*4  &amp; 9*5  &amp; 9*6  &amp; SUM \\
+         &amp; 8*4  &amp; 8*5  &amp; 8*6  &amp;      &amp;     \\
+    7*4  &amp; 7*5  &amp; 7*6  &amp;      &amp;      &amp;     \\
+    ---- &amp; ---- &amp; ---- &amp; ---- &amp; ---- &amp; --- \\
+    7*4 &amp; 8*4 + 7*5 &amp; 9*4 + 8*5 + 7*6 &amp; 9*5 + 8*6 &amp; 9*6 &amp;
+\end{array}
+$$<p>When \(i=0\), we have \(r_i=R_i\).  Otherwise, each \(r_i\) needs to include the carry
+from the previous \(r_{i-1}\):</p>
+$$
+    r_i = R_i + \lfloor \frac{r_{i_1}}{b} \rfloor
+$$<p>With these three equations, we can iteratively step right to left selecting candidate digits to find the desired
+product:</p>
+$$
+\begin{aligned}
+    R_i &amp; = \sum_{j=0}^{i} p_{i} q_{j-i}            \\[1em]
+    r_i &amp; = R_i + \lfloor \frac{r_{i-1}}{b} \rfloor  \\[1em]
+    s_i &amp; = r_i - b \lfloor \frac{r_{i}}{b} \rfloor
+\end{aligned}
+$$</div>
+<div class="section" id="different-bases">
+<h2>Different Bases</h2>
+<p>Moving to \(b=2\) simplifies a number of constructs above.  Primarily, the last digit must always be 1 (both primes
+are odd) and so the diagonal product becomes:</p>
+$$
+popcount(p\ \&amp;\ reverse(q))
+$$<p>There are also only two candidates for each pair since \(s_i\) can only be 0 or 1; this can be simplified to eg.
+a lookup table using an extra bit for the permutation index (we need to try (1, 0) and (0, 1) or (0, 0) and (1, 1) as
+we step forward).</p>
+<p>I suspect that normalized graphs of \( (i, r_i) \text{ for bases } b \in [2,min(P,Q)) \) may suggest some function to predict \(r_i\)
+which reduces the convergence time of finding \(P, Q\).</p>
+</div>
+</div>
+
+<script type="application/javascript">
+ "use strict";
+    mapp.onShowPage(() => {
+        document.title = "Factoring Large Co-primes";
+        renderMathInElement(document.body);
+    });
+</script>
